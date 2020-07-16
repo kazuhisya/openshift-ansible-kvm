@@ -1,0 +1,10 @@
+---
+- name: make conf dir
+  file:
+    path: files/bare-metal
+    state: directory
+
+- name: make bare-metal/install-config.yaml
+  template:
+    src:  templates/bare-metal/install-config-yaml.j2
+    dest: files/bare-metal/install-config.yaml

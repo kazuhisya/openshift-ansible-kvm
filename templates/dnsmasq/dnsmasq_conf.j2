@@ -1,0 +1,8 @@
+bind-interfaces
+listen-address={{ kvm_host.ip }}
+local=/lab.local/
+address=/apps.test.lab.local/{{ kvm_host.ip }}
+srv-host=_etcd-server-ssl._tcp.test.lab.local,master-0.test.lab.local,2380,0,10
+srv-host=_etcd-server-ssl._tcp.test.lab.local,master-1.test.lab.local,2380,0,10
+srv-host=_etcd-server-ssl._tcp.test.lab.local,master-2.test.lab.local,2380,0,10
+addn-hosts=/etc/hosts.ocp

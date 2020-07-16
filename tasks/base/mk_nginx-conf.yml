@@ -1,0 +1,10 @@
+---
+- name: make conf dir
+  file:
+    path: files/nginx
+    state: directory
+
+- name: make nginx/nginx.conf
+  template:
+    src:  templates/nginx/nginx_conf.j2
+    dest: files/nginx/nginx.conf

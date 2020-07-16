@@ -1,0 +1,13 @@
+---
+- hosts: base
+  vars_files:
+    - vars/main.yml
+    - vars/private.yml
+
+  tasks:
+  - include_tasks: tasks/base/mk_dnsmasq-conf.yml
+  - include_tasks: tasks/base/mk_libvirtd-conf.yml
+  - include_tasks: tasks/base/mk_nginx-conf.yml
+  - include_tasks: tasks/base/mk_boot-ipxe-cfg.yml
+  - include_tasks: tasks/base/mk_ocp-install-config.yml
+  - include_tasks: tasks/base/get_materials.yml

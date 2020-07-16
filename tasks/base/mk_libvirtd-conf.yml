@@ -1,0 +1,10 @@
+---
+- name: make conf dir
+  file:
+    path: files/libvirtd
+    state: directory
+
+- name: make libvirtd/nat-ocp.conf
+  template:
+    src:  templates/libvirtd/nat-ocp.j2
+    dest: files/libvirtd/nat-ocp.xml

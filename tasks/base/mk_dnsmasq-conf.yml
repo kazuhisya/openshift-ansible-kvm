@@ -1,0 +1,15 @@
+---
+- name: make conf dir
+  file:
+    path: files/dnsmasq
+    state: directory
+
+- name: make dnsmasq/ocp.conf
+  template:
+    src:  templates/dnsmasq/dnsmasq_conf.j2
+    dest: files/dnsmasq/ocp.conf
+
+- name: make dnsmasq/hosts.ocp
+  template:
+    src:  templates/dnsmasq/hosts_ocp.j2
+    dest: files/dnsmasq/hosts.ocp

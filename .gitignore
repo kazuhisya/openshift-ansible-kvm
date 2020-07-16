@@ -1,0 +1,4 @@
+.ansible
+vars/main.yml
+vars/private.yml
+files/*

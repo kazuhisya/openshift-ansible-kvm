@@ -1,0 +1,22 @@
+<network>
+  <name>ocp</name>
+  <bridge name='ocp0' stp='yes' delay='0'/>
+  <forward dev='{{ kvm_host.if }}' mode='nat'>
+    <nat>
+      <port start='1024' end='65535'/>
+    </nat>
+    <interface dev='{{ kvm_host.if }}'/>
+  </forward>
+  <ip address='172.16.0.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='172.16.0.2' end='172.16.0.254'/>
+      <bootp file='http://172.16.0.1:8000/ipxe/boot.ipxe'/>
+      <host mac='52:54:00:00:01:01' ip='172.16.0.100' name='bootstrap.test.lab.local'/>.
+      <host mac='52:54:00:00:01:02' ip='172.16.0.101' name='master-0.test.lab.local'/>.
+      <host mac='52:54:00:00:01:03' ip='172.16.0.102' name='master-1.test.lab.local'/>.
+      <host mac='52:54:00:00:01:04' ip='172.16.0.103' name='master-2.test.lab.local'/>.
+      <host mac='52:54:00:00:01:05' ip='172.16.0.104' name='worker-0.test.lab.local'/>.
+      <host mac='52:54:00:00:01:06' ip='172.16.0.105' name='worker-1.test.lab.local'/>.
+    </dhcp>
+  </ip>
+</network>
