@@ -15,12 +15,14 @@
     command: list_vms
   register: all_vms
 
+# want fix: move to using the virt module...
 - name: destroy old ocp-bootstrap
   shell: |
     virsh destroy ocp-bootstrap
     virsh undefine --remove-all-storage ocp-bootstrap
   when: '"ocp-bootstrap" in all_vms.list_vms'
 
+# want fix: move to using the virt module...
 - name: install bootstrap node
   shell: >-
     virt-install

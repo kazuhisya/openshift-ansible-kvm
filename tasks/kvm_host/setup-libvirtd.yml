@@ -1,8 +1,8 @@
 ---
-- name: (re)start libvirt daemon
+- name: start libvirt daemon
   service:
     name: libvirtd
-    state: restarted
+    state: started
 
 - virt_net:
     command: define
