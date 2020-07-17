@@ -7,4 +7,5 @@
       - virt-install
       - dnsmasq
       - nginx
+      - python3-lxml
     state: latest
