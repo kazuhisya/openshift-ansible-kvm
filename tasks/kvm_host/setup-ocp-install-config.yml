@@ -1,0 +1,45 @@
+---
+- name: make /root/bin dir
+  file:
+    path: /root/bin
+    state: directory
+
+- name: make bare-metal dir
+  file:
+    path: /root/ocp-upi-install/bare-metal
+    state: directory
+
+- name: send install-config.yaml to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/conf/install-config.yaml"
+    dest: /root/ocp-upi-install/bare-metal
+
+- name: send ocp installer
+  unarchive:
+    src: "files/{{ ocp.version }}/clients/{{ config.ocp_installer }}"
+    dest: /root/bin
+    exclude: README.md
+
+- name: send ocp clients
+  unarchive:
+    src: "files/{{ ocp.version }}/clients/{{ config.ocp_client }}"
+    dest: /root/bin
+    exclude: README.md
+
+- name: create ignition-configs
+  command: /root/bin/openshift-install create ignition-configs --dir=/root/ocp-upi-install/bare-metal
+
+- name: copy ign files
+  copy:
+    src:  /root/ocp-upi-install/bare-metal/{{ item }}
+    dest: /usr/share/nginx/html/ocp/rhcos/ignitions
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+    mode: 0644
+    remote_src: true
+  with_items:
+    - bootstrap.ign
+    - master.ign
+    - worker.ign
