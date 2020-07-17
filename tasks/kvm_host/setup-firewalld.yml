@@ -1,0 +1,37 @@
+---
+- name: (re)start firewalld daemon
+  service: 
+    name: firewalld
+    state: restarted
+
+- name: firewalld open ports for public
+  firewalld:
+    zone: public
+    port: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - 5900-5910/tcp
+    - 6443/tcp
+    - 22623/tcp
+    - 80/tcp
+    - 443/tcp
+    - 53/tcp
+    - 53/udp
+
+- name: firewalld open ports for libvirt
+  firewalld:
+    zone: libvirt
+    port: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - 8000/tcp
+    - 6443/tcp
+    - 22623/tcp
+    - 80/tcp
+    - 443/tcp
+    - 53/tcp
+    - 53/udp
