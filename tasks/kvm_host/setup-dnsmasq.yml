@@ -1,0 +1,31 @@
+---
+- name: send dnsmasq config to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/conf/dnsmasq.ocp.conf"
+    dest: /etc/dnsmasq.d/ocp.conf
+    selevel: s0
+    serole: object_r
+    setype: dnsmasq_etc_t
+    seuser: system_u
+
+- name: send dnsmasq hosts to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/conf/dnsmasq.hosts.ocp"
+    dest: /etc/hosts.ocp
+    selevel: s0
+    serole: object_r
+    setype: net_conf_t
+    seuser: system_u
+
+- name: add a new line to /etc/resolv.conf
+  lineinfile:
+    path: /etc/resolv.conf
+    firstmatch: yes
+    insertbefore: '^nameserver'
+    line: "nameserver {{ kvm_host.ip }}"
+
+- name: (re)start dnsmasq daemon
+  service:
+    name: dnsmasq
+    state: restarted
+

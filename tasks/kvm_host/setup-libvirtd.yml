@@ -1,0 +1,11 @@
+---
+- name: send libvirt config to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/conf/libvirtd.nat-ocp.xml"
+    dest: /root/ocp-upi-install/libvirtd.nat-ocp.xml
+
+- name: (re)start libvirt daemon
+  service:
+    name: libvirtd
+    state: restarted
+

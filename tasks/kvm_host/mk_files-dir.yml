@@ -1,0 +1,5 @@
+---
+- name: make working dir
+  file:
+    path: /root/ocp-upi-install
+    state: directory

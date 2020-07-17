@@ -1,0 +1,10 @@
+---
+- name: install the latest version of libvirt, dnsmasq and nginx
+  dnf:
+    name:
+      - libvirt-client
+      - libvirt-daemon
+      - virt-install
+      - dnsmasq
+      - nginx
+    state: latest

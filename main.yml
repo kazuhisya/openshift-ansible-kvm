@@ -19,4 +19,8 @@
     - vars/private.yml
 
   tasks:
-    - include_tasks: tasks/kvm_host/send_materials.yml
+    - include_tasks: tasks/kvm_host/mk_files-dir.yml
+#    - include_tasks: tasks/kvm_host/install-pkg.yml
+    - include_tasks: tasks/kvm_host/setup-dnsmasq.yml
+    - include_tasks: tasks/kvm_host/setup-libvirtd.yml
+#    - include_tasks: tasks/kvm_host/send_materials.yml
