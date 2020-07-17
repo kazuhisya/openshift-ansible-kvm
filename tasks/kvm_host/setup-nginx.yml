@@ -1,0 +1,62 @@
+---
+- name: send nginx config to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/conf/nginx.conf"
+    dest: /etc/nginx/nginx.conf
+    selevel: s0
+    serole: object_r
+    setype: httpd_config_t
+    seuser: system_u
+    backup: yes
+
+- name: make nginx ipxe dir
+  file:
+    path: /usr/share/nginx/html/ipxe
+    state: directory
+    recurse: yes
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+
+- name: make nginx ignitions dir
+  file:
+    path: /usr/share/nginx/html/ocp/rhcos/ignitions
+    state: directory
+    recurse: yes
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+
+- name: send rhcos to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/dependencies/{{ item }}"
+    dest: /usr/share/nginx/html/ipxe/
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+  with_items:
+    - "{{ config.rhcos_kernel }}"
+    - "{{ config.rhcos_initramfs }}"
+    - "{{ config.rhcos_bios }}"
+
+- name: send rhcos to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/conf/{{ item }}"
+    dest: /usr/share/nginx/html/ipxe/
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+  with_items:
+    - boot.ipxe.bootstrap
+    - boot.ipxe.master
+    - boot.ipxe.worker
+
+- name: (re)start nginx daemon
+  service:
+    name: nginx
+    state: restarted
+
