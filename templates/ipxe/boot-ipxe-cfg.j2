@@ -6,7 +6,7 @@
 cpuid --ext 29 && set arch x64 || set arch x86
 cpuid --ext 29 && set archl amd64 || set archl i386
 
-kernel  http://172.16.0.1:8000/ipxe/rhcos-{{ ocp.version }}-x86_64-installer-kernel ip=dhcp rd.neednet=1 initrd=http://172.16.0.1:8000/ipxe/rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://172.16.0.1:8000/ocp/rhcos/images/latest/bios.raw.gz coreos.inst.ignition_url=http://172.16.0.1:8000/ocp/rhcos/ignitions/{{ item }}.ign
-initrd http://172.16.0.1:8000/ipxe/rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img
+kernel  http://172.16.0.1:8000/ipxe/{{ config.rhcos_kernel }} ip=dhcp rd.neednet=1 initrd=http://172.16.0.1:8000/ipxe/{{ config.rhcos_initramfs }} console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://172.16.0.1:8000/ipxe/{{ config.rhcos_bios }} coreos.inst.ignition_url=http://172.16.0.1:8000/ocp/rhcos/ignitions/{{ item }}.ign
+initrd http://172.16.0.1:8000/ipxe/{{ config.rhcos_initramfs }}
 boot
 EOF

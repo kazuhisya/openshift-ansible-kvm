@@ -1,40 +1,40 @@
 ---
 - name: download rhcos kernel
   get_url:
-    url: "{{ config.rhcos_kernel_url }}"
-    dest: "files/{{ ocp.version }}/dependencies/rhcos-{{ ocp.version }}-x86_64-installer-kernel"
+    url: "{{ url.rhcos_kernel_url }}"
+    dest: "files/{{ ocp.version }}/dependencies/{{ config.rhcos_kernel }}"
   register: downloaded_kernel
   until: downloaded_kernel is succeeded
   retries: 3
 
 - name: download rhcos initramfs
   get_url:
-    url: "{{ config.rhcos_initramfs_url }}"
-    dest: "files/{{ ocp.version }}/dependencies/rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img"
+    url: "{{ url.rhcos_initramfs_url }}"
+    dest: "files/{{ ocp.version }}/dependencies/{{ config.rhcos_initramfs }}"
   register: downloaded_initramfs
   until: downloaded_initramfs is succeeded
   retries: 3
 
 - name: download rhcos bios
   get_url:
-    url: "{{ config.rhcos_bios_url }}"
-    dest: "files/{{ ocp.version }}/dependencies/rhcos-{{ ocp.version }}-x86_64-metal.raw.gz"
+    url: "{{ url.rhcos_bios_url }}"
+    dest: "files/{{ ocp.version }}/dependencies/{{ config.rhcos_bios }}"
   register: downloaded_bios
   until: downloaded_bios is succeeded
   retries: 3
 
 - name: download ocp installer
   get_url:
-    url: "{{ config.ocp_installer_url }}"
-    dest: "files/{{ ocp.version }}/clients/openshift-install-linux-{{ ocp.version }}.tar.gz"
+    url: "{{ url.ocp_installer_url }}"
+    dest: "files/{{ ocp.version }}/clients/{{ config.ocp_installer }}"
   register: downloaded_installer
   until: downloaded_installer is succeeded
   retries: 3
 
 - name: download ocp client
   get_url:
-    url: "{{ config.ocp_client_url }}"
-    dest: "files/{{ ocp.version }}/clients/openshift-client-linux-{{ ocp.version }}.tar.gz"
+    url: "{{ url.ocp_client_url }}"
+    dest: "files/{{ ocp.version }}/clients/{{ config.ocp_client }}"
   register: downloaded_client
   until: downloaded_client is succeeded
   retries: 3
