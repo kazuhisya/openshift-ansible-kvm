@@ -1,13 +1,8 @@
 ---
-- name: make material dir
-  file:
-    path: files/ocp
-    state: directory
-
 - name: download rhcos kernel
   get_url:
     url: "{{ config.rhcos_kernel_url }}"
-    dest: "files/ocp/rhcos-{{ ocp.version }}-x86_64-installer-kernel"
+    dest: "files/{{ ocp.version }}/dependencies/rhcos-{{ ocp.version }}-x86_64-installer-kernel"
   register: downloaded_kernel
   until: downloaded_kernel is succeeded
   retries: 3
@@ -15,7 +10,7 @@
 - name: download rhcos initramfs
   get_url:
     url: "{{ config.rhcos_initramfs_url }}"
-    dest: "files/ocp/rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img"
+    dest: "files/{{ ocp.version }}/dependencies/rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img"
   register: downloaded_initramfs
   until: downloaded_initramfs is succeeded
   retries: 3
@@ -23,20 +18,15 @@
 - name: download rhcos bios
   get_url:
     url: "{{ config.rhcos_bios_url }}"
-    dest: "files/ocp/rhcos-{{ ocp.version }}-x86_64-metal.raw.gz"
+    dest: "files/{{ ocp.version }}/dependencies/rhcos-{{ ocp.version }}-x86_64-metal.raw.gz"
   register: downloaded_bios
   until: downloaded_bios is succeeded
   retries: 3
 
-#- name: "[workaround] rename bios file"
-#  copy:
-#    src: "files/ocp/rhcos-{{ ocp.version }}-x86_64-metal.raw.gz"
-#    dest: files/ocp/bios.raw.gz
-
 - name: download ocp installer
   get_url:
     url: "{{ config.ocp_installer_url }}"
-    dest: "files/ocp/openshift-install-linux-{{ ocp.version }}.tar.gz"
+    dest: "files/{{ ocp.version }}/clients/openshift-install-linux-{{ ocp.version }}.tar.gz"
   register: downloaded_installer
   until: downloaded_installer is succeeded
   retries: 3
@@ -44,7 +34,7 @@
 - name: download ocp client
   get_url:
     url: "{{ config.ocp_client_url }}"
-    dest: "files/ocp/openshift-client-linux-{{ ocp.version }}.tar.gz"
+    dest: "files/{{ ocp.version }}/clients/openshift-client-linux-{{ ocp.version }}.tar.gz"
   register: downloaded_client
   until: downloaded_client is succeeded
   retries: 3

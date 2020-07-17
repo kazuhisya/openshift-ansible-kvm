@@ -1,12 +1,12 @@
 ---
 - name: make working dir
   file:
-    path: /root/ocp-quick-install
+    path: /root/ocp-upi-install
     state: directory
 
 - name: send materials to kvm host
   copy:
-    src:  files/
-    dest: /root/ocp-quick-install
+    src:  "files/{{ ocp.version }}"
+    dest: /root/ocp-upi-install
 
 

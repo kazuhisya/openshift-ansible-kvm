@@ -1,13 +1,8 @@
 ---
-- name: make conf dir
-  file:
-    path: files/ipxe
-    state: directory
-
 - name: make ipxe/boot.ipxe.ROLE
   template:
     src:  templates/ipxe/boot-ipxe-cfg.j2
-    dest: files/ipxe/boot.ipxe.{{ item }}
+    dest: "files/{{ ocp.version }}/conf/boot.ipxe.{{ item }}"
   with_items:
     - bootstrap
     - master
