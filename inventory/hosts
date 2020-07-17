@@ -1,8 +1,8 @@
 [base]
 127.0.0.1 ansible_connection=local
 
-[kvm]
+[kvm_host]
 192.168.86.102
 
-[kvm:vars]
+[kvm_host:vars]
 ansible_user=root

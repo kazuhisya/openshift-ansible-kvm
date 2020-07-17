@@ -1,0 +1,15 @@
+---
+- name: make working dir
+  file:
+    path: /root/ocp-upi-install
+    state: directory
+
+- name: send config to kvm host
+  copy:
+    src:  "files/{{ ocp.version }}/conf"
+    dest: /root/ocp-upi-install
+
+      #- name: send dependencies to kvm host
+      #  copy:
+      #    src:  "files/{{ ocp.version }}/dependencies"
+      #    dest: /root/ocp-upi-install

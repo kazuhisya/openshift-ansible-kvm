@@ -13,10 +13,10 @@
     - include_tasks: tasks/base/mk_ocp-install-config.yml
     - include_tasks: tasks/base/get_materials.yml
 
-- hosts: kvm
+- hosts: kvm_host
   vars_files:
     - vars/main.yml
     - vars/private.yml
 
   tasks:
-    - include_tasks: tasks/kvm/send_materials.yml
+    - include_tasks: tasks/kvm_host/send_materials.yml
