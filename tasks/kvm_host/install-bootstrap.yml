@@ -1,0 +1,62 @@
+---
+- name: prepare bootstrap ipxe files
+  copy:
+    src:  /usr/share/nginx/html/ipxe/boot.ipxe.bootstrap
+    dest: /usr/share/nginx/html/ipxe/boot.ipxe
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+    mode: 0644
+    remote_src: true
+
+- name: check if ocp-bootstrap already exists
+  virt:
+    command: list_vms
+  register: all_vms
+
+- name: destroy old ocp-bootstrap
+  shell: |
+    virsh destroy ocp-bootstrap
+    virsh undefine --remove-all-storage ocp-bootstrap
+  when: '"ocp-bootstrap" in all_vms.list_vms'
+
+- name: install bootstrap node
+  shell: >-
+    virt-install
+    --name ocp-bootstrap
+    --hvm
+    --virt-type kvm
+    --pxe
+    --arch x86_64
+    --os-type linux
+    --os-variant rhel8.0
+    --network network=ocp,mac="52:54:00:00:01:01"
+    --vcpus {{ bootstrap.cpu }}
+    --ram {{ bootstrap.ram }}
+    --disk pool=default,size={{ bootstrap.disk }},format=qcow2
+    --check disk_size=off
+    --nographics
+    --noautoconsole
+    --boot menu=on,useserial=on
+
+- name: waiting for end of the initial installation of bootstrap
+  virt:
+    name: ocp-bootstrap
+    command: status
+  register: result
+  until: result.status == "shutdown"
+  retries: 100
+  delay: 10
+
+- name: restart bootstrap
+  virt:
+    name: ocp-bootstrap
+    state: running
+
+- name: waiting for startup of bootstrap
+  wait_for:
+    host: 172.16.0.100
+    port: 22
+    delay: 10
+    state: drained
