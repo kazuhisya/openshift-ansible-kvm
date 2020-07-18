@@ -7,7 +7,6 @@
     serole: object_r
     setype: httpd_config_t
     seuser: system_u
-    backup: yes
 
 - name: make nginx ipxe dir
   file:
