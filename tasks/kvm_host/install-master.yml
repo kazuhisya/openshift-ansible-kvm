@@ -1,0 +1,69 @@
+---
+- name: prepare master ipxe files
+  copy:
+    src:  /usr/share/nginx/html/ipxe/boot.ipxe.master
+    dest: /usr/share/nginx/html/ipxe/boot.ipxe
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+    mode: 0644
+    remote_src: true
+
+- name: check if master already exists
+  virt:
+    command: list_vms
+  register: all_vms
+
+# want fix: move to using the virt module...
+- name: destroy old master
+  shell: |
+    virsh destroy {{ item.name }}
+    virsh undefine --remove-all-storage {{ item.name }}
+  when: 'item.name  in all_vms.list_vms'
+  with_items: "{{ master }}"
+
+# want fix: move to using the virt module...
+- name: install master node
+  shell: >-
+    virt-install
+    --name {{item.name}}
+    --hvm
+    --virt-type kvm
+    --pxe
+    --arch x86_64
+    --os-type linux
+    --os-variant rhel8.0
+    --network network=ocp,mac="52:54:00:00:01:{{item.mac}}"
+    --vcpus {{spec_master.cpu}}
+    --ram {{spec_master.ram}}
+    --disk pool=default,size={{spec_master.disk}},format=qcow2
+    --check disk_size=off
+    --nographics
+    --noautoconsole
+    --boot menu=on,useserial=on
+  with_items: "{{ master }}"
+
+- name: waiting for end of the initial installation of master
+  virt:
+    name: "{{ item.name }}"
+    command: status
+  register: result
+  until: result.status == "shutdown"
+  retries: 100
+  delay: 10
+  with_items: "{{ master }}"
+
+- name: restart master
+  virt:
+    name: "{{ item.name }}"
+    state: running
+  with_items: "{{ master }}"
+
+- name: waiting for startup of master
+  wait_for:
+    host: "{{ item.ip }}"
+    port: 22
+    delay: 10
+    state: drained
+  with_items: "{{ master }}"
