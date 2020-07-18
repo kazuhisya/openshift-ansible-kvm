@@ -58,7 +58,7 @@
 
 - name: waiting for startup of bootstrap
   wait_for:
-    host: 172.16.0.100
+    host: "{{ bootstrap.0.ip }}"
     port: 22
     delay: 10
     state: drained
