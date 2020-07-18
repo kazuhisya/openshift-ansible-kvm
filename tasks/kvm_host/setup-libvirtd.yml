@@ -5,6 +5,25 @@
     state: started
 
 - virt_net:
+    command: list_nets
+  register: all_nets
+
+- virt_net:
+    command: destroy
+    name: ocp
+  when: 'ocp in all_nets.list_nets'
+
+- virt_net:
+    command: undefine
+    name: ocp
+  when: 'ocp in all_nets.list_nets'
+
+- virt_net:
+    command: define
+    name: ocp
+    xml: "{{lookup('file', 'files/{{ ocp.version }}/conf/libvirtd.nat-ocp.xml')}}"
+
+- virt_net:
     command: define
     name: ocp
     xml: "{{lookup('file', 'files/{{ ocp.version }}/conf/libvirtd.nat-ocp.xml')}}"
