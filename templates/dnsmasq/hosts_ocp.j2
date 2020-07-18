@@ -1,8 +1,8 @@
 {{ kvm_host.ip }}     api.{{ net.subdomain }}.{{ net.domain }} {{ net.domain }} api-int.{{ net.subdomain }}.{{ net.domain }}
-{{ bootstrap.0.ip }}    {{ bootstrap.0.name }}.{{ net.subdomain }}.{{ net.domain }}
+{{ bootstrap.0.ip }}  {{ bootstrap.0.name }} {{ bootstrap.0.name }}.{{ net.subdomain }}.{{ net.domain }}
 {% for m in master %}
-{{ m.ip }}            {{ m.name }}.{{ net.subdomain }}.{{ net.domain }} etcd-0.{{ net.subdomain }}.{{ net.domain }}
+{{ m.ip }}            {{ m.name }} {{ m.name }}.{{ net.subdomain }}.{{ net.domain }} etcd-0.{{ net.subdomain }}.{{ net.domain }}
 {% endfor %}
 {% for w in worker %}
-{{ w.ip }}            {{ w.name }}.{{ net.subdomain }}.{{ net.domain }}
+{{ w.ip }}            {{ w.name }} {{ w.name }}.{{ net.subdomain }}.{{ net.domain }}
 {% endfor %}
