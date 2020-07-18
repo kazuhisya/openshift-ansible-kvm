@@ -1,22 +1,22 @@
 apiVersion: v1
-baseDomain: lab.local
+baseDomain: {{ net.domain }}
 compute:
 - hyperthreading: Enabled
   name: worker
-  replicas: 0
+  replicas: {{ spec_worker.num }}
 controlPlane:
   hyperthreading: Enabled
   name: master
-  replicas: 3
+  replicas: {{ spec_master.num }}
 metadata:
-  name: test
+  name: {{ net.subdomain }}
 networking:
   clusterNetworks:
-  - cidr: 10.128.0.0/14
-    hostPrefix: 23
+  - cidr: {{ net.cluster_cidr }}
+    hostPrefix: {{ net.cluster_prefx }}
   networkType: OpenShiftSDN
   serviceNetwork:
-  - 172.30.0.0/16
+  - {{ net.service }}
 platform:
   none: {}
 pullSecret: '{{ enc.pullsecret }}'

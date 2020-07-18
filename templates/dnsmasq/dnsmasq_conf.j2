@@ -1,8 +1,8 @@
 bind-interfaces
 listen-address={{ kvm_host.ip }}
 local=/{{ net.domain }}/
-address=/apps.{{ net.subdomain }}/{{ kvm_host.ip }}
+address=/apps.{{ net.subdomain }}.{{ net.domain }}/{{ kvm_host.ip }}
 {% for m in master %}
-srv-host=_etcd-server-ssl._tcp.{{ net.subdomain }},{{ m.name }}.{{ net.subdomain }},2380,0,10
+srv-host=_etcd-server-ssl._tcp.{{ net.subdomain }}.{{ net.domain }},{{ m.name }}.{{ net.subdomain }}.{{ net.domain }},2380,0,10
 {% endfor %}
 addn-hosts=/etc/hosts.ocp
