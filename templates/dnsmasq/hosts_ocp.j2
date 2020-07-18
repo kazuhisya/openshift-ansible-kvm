@@ -1,8 +1,8 @@
-{{ kvm_host.ip }}   api.test.lab.local lab.local api-int.test.lab.local
-172.16.0.100        bootstrap.test.lab.local
-172.16.0.101        master-0.test.lab.local etcd-0.test.lab.local
-172.16.0.102        master-1.test.lab.local etcd-1.test.lab.local
-172.16.0.103        master-2.test.lab.local etcd-2.test.lab.local
-172.16.0.104        worker-0.test.lab.local
-172.16.0.105        worker-1.test.lab.local
-
+{{ kvm_host.ip }}     api.{{ net.subdomain }} {{ net.domain }} api-int.{{ net.subdomain }}
+{{ bootstrap.0.ip }}    {{ bootstrap.0.name }}.{{ net.subdomain }}
+{% for m in master %}
+{{ m.ip }}            {{ m.name }}.{{ net.subdomain }} etcd-0.{{ net.subdomain }}
+{% endfor %}
+{% for w in worker %}
+{{ w.ip }}            {{ w.name }}.{{ net.subdomain }}
+{% endfor %}
