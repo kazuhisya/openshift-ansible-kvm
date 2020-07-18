@@ -18,21 +18,16 @@ log_format basic '$remote_addr [$time_local] '
 
     upstream apib {
             least_conn;
-            server bootstrap.test.lab.local:6443;
-            server master-0.test.lab.local:6443;
-            server master-1.test.lab.local:6443;
-            server master-2.test.lab.local:6443;
-#            server 172.16.0.100:6443 fail_timeout=10s;
-#            server 172.16.0.101:6443 fail_timeout=10s;
-#            server 172.16.0.102:6443 fail_timeout=10s;
-#            server 172.16.0.103:6443 fail_timeout=10s;
+            server {{ bootstrap.0.name}}.{{ net.subdomain }}.{{ net.domain }}:6443;
+{% for m in master %}
+            server {{ m.name}}.{{ net.subdomain }}.{{ net.domain }}:6443;
+{% endfor %}
     }
 
     server {
             listen          6443;
             proxy_pass      apib;
             proxy_next_upstream on;
-#            proxy_ssl       on;
             proxy_timeout   1s;
             proxy_responses 1;
             error_log /var/log/nginx/stream_apib.log warn;
@@ -40,34 +35,26 @@ log_format basic '$remote_addr [$time_local] '
 
     upstream configureb {
             least_conn;
-            server bootstrap.test.lab.local:22623;
-            server master-0.test.lab.local:22623;
-            server master-1.test.lab.local:22623;
-            server master-2.test.lab.local:22623;
-#            server 172.16.0.100:22623 fail_timeout=10s;
-#            server 172.16.0.101:22623 fail_timeout=10s;
-#            server 172.16.0.102:22623 fail_timeout=10s;
-#            server 172.16.0.103:22623 fail_timeout=10s;
+            server {{ bootstrap.0.name}}.{{ net.subdomain }}.{{ net.domain }}:22623;
+{% for m in master %}
+            server {{ m.name}}.{{ net.subdomain }}.{{ net.domain }}:22623;
+{% endfor %}
     }
 
     server {
             listen          22623;
             proxy_pass      configureb;
             proxy_next_upstream on;
-#            proxy_protocol  on;
-#            proxy_ssl       on;
-#            proxy_ssl_session_reuse off;
-#            proxy_timeout   1s;
-#            proxy_responses 1;
             error_log /var/log/nginx/stream_configureb.log warn;
     }
     upstream ingressnosslb {
             least_conn;
-            server master-0.test.lab.local:80;
-            server master-1.test.lab.local:80;
-            server master-2.test.lab.local:80;
-            server worker-0.test.lab.local:80;
-            server worker-1.test.lab.local:80;
+{% for m in master %}
+            server {{ m.name}}.{{ net.subdomain }}.{{ net.domain }}:80;
+{% endfor %}
+{% for w in worker %}
+            server {{ w.name}}.{{ net.subdomain }}.{{ net.domain }}:80;
+{% endfor %}
     }
 
     server {
@@ -81,11 +68,12 @@ log_format basic '$remote_addr [$time_local] '
 
     upstream ingresssslb {
             least_conn;
-            server master-0.test.lab.local:443;
-            server master-1.test.lab.local:443;
-            server master-2.test.lab.local:443;
-            server worker-0.test.lab.local:443;
-            server worker-1.test.lab.local:443;
+{% for m in master %}
+            server {{ m.name}}.{{ net.subdomain }}.{{ net.domain }}:443;
+{% endfor %}
+{% for w in worker %}
+            server {{ w.name}}.{{ net.subdomain }}.{{ net.domain }}:443;
+{% endfor %}
     }
 
     server {
@@ -122,7 +110,6 @@ http {
         server_name  _;
         root         /usr/share/nginx/html;
 
-        # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
         location / {
