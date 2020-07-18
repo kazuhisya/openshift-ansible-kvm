@@ -3,11 +3,11 @@ baseDomain: {{ net.domain }}
 compute:
 - hyperthreading: Enabled
   name: worker
-  replicas: {{ spec_worker.num }}
+  replicas: {{ ocp.num_worker }}
 controlPlane:
   hyperthreading: Enabled
   name: master
-  replicas: {{ spec_master.num }}
+  replicas: {{ ocp.num_master }}
 metadata:
   name: {{ net.subdomain }}
 networking:
