@@ -10,33 +10,33 @@
     mode: 0644
     remote_src: true
 
-- name: check if ocp-bootstrap already exists
+- name: check if bootstrap already exists
   virt:
     command: list_vms
   register: all_vms
 
 # want fix: move to using the virt module...
-- name: destroy old ocp-bootstrap
+- name: destroy old bootstrap
   shell: |
-    virsh destroy ocp-bootstrap
-    virsh undefine --remove-all-storage ocp-bootstrap
-  when: '"ocp-bootstrap" in all_vms.list_vms'
+    virsh destroy {{ bootstrap.0.name }}
+    virsh undefine --remove-all-storage {{ bootstrap.0.name }}
+  when: 'bootstrap.0.name  in all_vms.list_vms'
 
 # want fix: move to using the virt module...
 - name: install bootstrap node
   shell: >-
     virt-install
-    --name ocp-bootstrap
+    --name {{bootstrap.0.name}}
     --hvm
     --virt-type kvm
     --pxe
     --arch x86_64
     --os-type linux
     --os-variant rhel8.0
-    --network network=ocp,mac="52:54:00:00:01:01"
-    --vcpus {{ bootstrap.cpu }}
-    --ram {{ bootstrap.ram }}
-    --disk pool=default,size={{ bootstrap.disk }},format=qcow2
+    --network network=ocp,mac="52:54:00:00:01:{{bootstrap.0.mac}}"
+    --vcpus {{spec_bootstrap.cpu}}
+    --ram {{spec_bootstrap.ram}}
+    --disk pool=default,size={{spec_bootstrap.disk}},format=qcow2
     --check disk_size=off
     --nographics
     --noautoconsole
@@ -44,7 +44,7 @@
 
 - name: waiting for end of the initial installation of bootstrap
   virt:
-    name: ocp-bootstrap
+    name: "{{ bootstrap.0.name }}"
     command: status
   register: result
   until: result.status == "shutdown"
@@ -53,7 +53,7 @@
 
 - name: restart bootstrap
   virt:
-    name: ocp-bootstrap
+    name: "{{ bootstrap.0.name }}"
     state: running
 
 - name: waiting for startup of bootstrap
