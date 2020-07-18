@@ -1,0 +1,69 @@
+---
+- name: prepare worker ipxe files
+  copy:
+    src:  /usr/share/nginx/html/ipxe/boot.ipxe.worker
+    dest: /usr/share/nginx/html/ipxe/boot.ipxe
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+    mode: 0644
+    remote_src: true
+
+- name: check if worker already exists
+  virt:
+    command: list_vms
+  register: all_vms
+
+# want fix: move to using the virt module...
+- name: destroy old worker
+  shell: |
+    virsh destroy {{ item.name }}
+    virsh undefine --remove-all-storage {{ item.name }}
+  when: 'item.name  in all_vms.list_vms'
+  with_items: "{{ worker }}"
+
+# want fix: move to using the virt module...
+- name: install worker node
+  shell: >-
+    virt-install
+    --name {{item.name}}
+    --hvm
+    --virt-type kvm
+    --pxe
+    --arch x86_64
+    --os-type linux
+    --os-variant rhel8.0
+    --network network=ocp,mac="52:54:00:00:01:{{item.mac}}"
+    --vcpus {{spec_worker.cpu}}
+    --ram {{spec_worker.ram}}
+    --disk pool=default,size={{spec_worker.disk}},format=qcow2
+    --check disk_size=off
+    --nographics
+    --noautoconsole
+    --boot menu=on,useserial=on
+  with_items: "{{ worker }}"
+
+- name: waiting for end of the initial installation of worker
+  virt:
+    name: "{{ item.name }}"
+    command: status
+  register: result
+  until: result.status == "shutdown"
+  retries: 100
+  delay: 10
+  with_items: "{{ worker }}"
+
+- name: restart worker
+  virt:
+    name: "{{ item.name }}"
+    state: running
+  with_items: "{{ worker }}"
+
+- name: waiting for startup of worker
+  wait_for:
+    host: "{{ item.ip }}"
+    port: 22
+    delay: 10
+    state: drained
+  with_items: "{{ worker }}"
