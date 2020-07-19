@@ -41,7 +41,7 @@ spec_master:
   ram: 12288
   disk: 150
 spec_worker:
-  num_worker: 2
+  num_worker: 0
   cpu: 2
   ram: 8192
   disk: 150
