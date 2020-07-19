@@ -4,6 +4,17 @@
     path: /root/bin
     state: directory
 
+- name: check old bare-metal dir
+  stat:
+    path: "/root/ocp-upi-install/bare-metal"
+  register: chk_file
+
+- name: remove old bare-metal dir
+  file:
+    path: /root/ocp-upi-install/bare-metal
+    state: absent
+  when: chk_file.stat.exists == true
+
 - name: make bare-metal dir
   file:
     path: /root/ocp-upi-install/bare-metal
@@ -43,3 +54,4 @@
     - bootstrap.ign
     - master.ign
     - worker.ign
+
