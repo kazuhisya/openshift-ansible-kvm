@@ -35,3 +35,12 @@
   until: job_result.finished
   retries: 1200
   delay: 30
+
+- name: check kubeadmin-password
+  slurp:
+    src: /root/ocp-upi-install/bare-metal/auth/kubeadmin-password
+  register: kubeadmin_password
+
+- name: show kubeadmin-password
+  debug:
+    msg: "{{ kubeadmin_password.content | b64decode }}"
