@@ -1,4 +1,3 @@
 .ansible
-vars/main.yml
-vars/private.yml
+vars/config.yml
 files/*

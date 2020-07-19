@@ -1,0 +1,60 @@
+---
+net:
+  domain: lab.local
+  subdomain: test
+  cluster_cidr: 10.128.0.0/14
+  cluster_prefx: 23
+  service: 172.30.0.0/16
+
+bootstrap:
+  - name: bootstrap
+    ip: 172.16.0.100
+    mac: "01"
+master:
+  - name: master-0
+    ip: 172.16.0.101
+    mac: "02"
+    etcd_id: 0
+  - name: master-1
+    ip: 172.16.0.102
+    mac: "03"
+    etcd_id: 1
+  - name: master-2
+    ip: 172.16.0.103
+    mac: "04"
+    etcd_id: 2
+worker:
+  - name: worker-0
+    ip: 172.16.0.104
+    mac: "05"
+  - name: worker-1
+    ip: 172.16.0.105
+    mac: "06"
+
+spec_bootstrap:
+  cpu: 4
+  ram: 12288
+  disk: 150
+spec_master:
+  num_master: 3
+  cpu: 4
+  ram: 12288
+  disk: 150
+spec_worker:
+  num_worker: 2
+  cpu: 2
+  ram: 8192
+  disk: 150
+
+url:
+  rhcos_kernel_url:    "{{ static.rhcos_base_url }}/{{ config.rhcos_kernel  }}"
+  rhcos_initramfs_url: "{{ static.rhcos_base_url }}/{{ config.rhcos_initramfs }}"
+  rhcos_bios_url:      "{{ static.rhcos_base_url }}/{{ config.rhcos_bios }}"
+  ocp_installer_url:   "{{ static.clients_base_url }}/{{ config.ocp_installer }}"
+  ocp_client_url:      "{{ static.clients_base_url }}/{{ config.ocp_client }}"
+  sha256_dep_url:      "{{ static.rhcos_base_url }}/sha256sum.txt"
+  sha256_client_url:   "{{ static.clients_base_url }}/sha256sum.txt"
+
+static:
+  rhcos_base_url:   "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp.version_dir }}"
+  clients_base_url: "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp.latest_version }}"

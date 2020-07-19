@@ -1,8 +1,8 @@
 ---
 - hosts: base
   vars_files:
-    - vars/main.yml
-    - vars/private.yml
+    - vars/config.yml
+    - vars/extra.yml
 
   tasks:
     - include_tasks: tasks/base/mk_files-dir.yml
@@ -15,8 +15,8 @@
 
 - hosts: kvm_host
   vars_files:
-    - vars/main.yml
-    - vars/private.yml
+    - vars/config.yml
+    - vars/extra.yml
 
   tasks:
     - include_tasks: tasks/kvm_host/mk_files-dir.yml

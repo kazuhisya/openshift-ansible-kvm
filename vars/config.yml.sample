@@ -1,0 +1,36 @@
+---
+# kvm host ip and NIC's name
+# e.g. 192.168.86.100, enp2s0f0
+kvm_host:
+  ip: <IP addr>
+  if: <IF name>
+
+ocp:
+  version: 4.5.2
+  version_dir: 4.5/4.5.2
+  latest_version: 4.5.2
+
+# Download URLs
+# kernel
+# for 4.2, 4.3:     rhcos-{{ ocp.version }}-x86_64-installer-kernel
+# for 4.4, 4.5:     rhcos-{{ ocp.version }}-x86_64-installer-kernel-x86_64
+# initramfs
+# for 4.2, 4.3:     rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img
+# for 4.4, 4.5:     rhcos-{{ ocp.version }}-x86_64-installer-initramfs.x86_64.img
+# bios
+# for 4.2:          rhcos-{{ ocp.version }}-x86_64-metal-bios.raw.gz
+# for 4.3:          rhcos-{{ ocp.version }}-x86_64-metal.raw.gz
+# for 4.4, 4.5:     rhcos-{{ ocp.version }}-x86_64-metal.x86_64.raw.gz
+config:
+  rhcos_kernel:    "rhcos-{{ ocp.version }}-x86_64-installer-kernel-x86_64"
+  rhcos_initramfs: "rhcos-{{ ocp.version }}-x86_64-installer-initramfs.x86_64.img"
+  rhcos_bios:      "rhcos-{{ ocp.version }}-x86_64-metal.x86_64.raw.gz"
+  ocp_installer:   "openshift-install-linux-{{ ocp.latest_version }}.tar.gz"
+  ocp_client:      "openshift-client-linux-{{ ocp.latest_version }}.tar.gz"
+
+# pullsecret: '{"auths":{"cloud.openshift.com"......}}'
+# sshkey: '<your ssh pub key>'
+key:
+  pullsecret: ''
+  sshkey: ''
+
