@@ -1,21 +1,17 @@
 ---
 - name: wait-for bootstrap-complete
-#  command: /root/bin/openshift-install --dir=/root/ocp-upi-install/bare-metal wait-for bootstrap-complete
-#  async: 1
-#  poll: 0
-#  register: bootstrap_complete
+  command: /root/bin/openshift-install --dir=/root/ocp-upi-install/bare-metal wait-for bootstrap-complete
+  async: 3600
+  poll: 0
+  register: bootstrap_complete_sleeper
 
-#- name: 'bootstrap-complete - check on async task'
-#  async_status:
-#    jid: "{{ bootstrap_complete.ansible_job_id }}"
-#  register: job_result
-#  until: job_result.finished
-#  retries: 3600
-#  delay: 60
-
-- name: bootstrap-complete
-  debug:
-    msg: "{{ bootstrap_complete.stderr_lines }}"
+- name: 'bootstrap-complete - check on async task'
+  async_status:
+    jid: "{{ bootstrap_complete_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 1200
+  delay: 30
 
 - name: oc path to configs.imageregistry.operator.openshift.io/cluster
   command: /root/bin/oc patch configs.imageregistry.operator.openshift.io/cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
@@ -28,18 +24,14 @@
 
 - name: wait-for install-complete
   command: /root/bin/openshift-install --dir=/root/ocp-upi-install/bare-metal wait-for install-complete
-#  async: 3600
-#  poll: 10
-#  register: install_complete
+  async: 3600
+  poll: 0
+  register: bootstrap_complete_sleeper
 
-#- name: 'install-complete - check on async task'
-#  async_status:
-#    jid: "{{ install_complete.ansible_job_id }}"
-#  register: job_result
-#  until: job_result.finished
-#  retries: 3600
-#  delay: 60
-
-#- name: install-complete
-#  debug:
-#    msg: "{{ install_complete.stderr_lines }}"
+- name: 'bootstrap-complete - check on async task'
+  async_status:
+    jid: "{{ bootstrap_complete_sleeper.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 1200
+  delay: 30
