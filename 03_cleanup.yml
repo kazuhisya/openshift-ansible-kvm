@@ -1,0 +1,8 @@
+---
+- hosts: kvm_host
+  vars_files:
+    - vars/config.yml
+    - vars/extra.yml
+
+  tasks:
+    - include_tasks: tasks/kvm_host/cleanup-all.yaml
