@@ -59,6 +59,7 @@
     name: "{{ item.name }}"
     state: running
   with_items: "{{ worker }}"
+  delay: 3
 
 - name: waiting for startup of worker
   wait_for:
