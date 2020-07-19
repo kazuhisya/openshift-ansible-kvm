@@ -3,6 +3,7 @@
   get_url:
     url: "{{ url.rhcos_kernel_url }}"
     dest: "files/{{ ocp.version }}/dependencies/{{ config.rhcos_kernel }}"
+    checksum: "sha256:{{ url.sha256_dep_url }}"
   register: downloaded_kernel
   until: downloaded_kernel is succeeded
   retries: 3
@@ -11,6 +12,7 @@
   get_url:
     url: "{{ url.rhcos_initramfs_url }}"
     dest: "files/{{ ocp.version }}/dependencies/{{ config.rhcos_initramfs }}"
+    checksum: "sha256:{{ url.sha256_dep_url }}"
   register: downloaded_initramfs
   until: downloaded_initramfs is succeeded
   retries: 3
@@ -19,6 +21,7 @@
   get_url:
     url: "{{ url.rhcos_bios_url }}"
     dest: "files/{{ ocp.version }}/dependencies/{{ config.rhcos_bios }}"
+    checksum: "sha256:{{ url.sha256_dep_url }}"
   register: downloaded_bios
   until: downloaded_bios is succeeded
   retries: 3
@@ -27,6 +30,7 @@
   get_url:
     url: "{{ url.ocp_installer_url }}"
     dest: "files/{{ ocp.version }}/clients/{{ config.ocp_installer }}"
+    checksum: "sha256:{{ url.sha256_client_url }}"
   register: downloaded_installer
   until: downloaded_installer is succeeded
   retries: 3
@@ -35,6 +39,7 @@
   get_url:
     url: "{{ url.ocp_client_url }}"
     dest: "files/{{ ocp.version }}/clients/{{ config.ocp_client }}"
+    checksum: "sha256:{{ url.sha256_client_url }}"
   register: downloaded_client
   until: downloaded_client is succeeded
   retries: 3
