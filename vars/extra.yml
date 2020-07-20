@@ -41,6 +41,9 @@ spec_master:
   ram: 12288
   disk: 150
 spec_worker:
+  # "You must set the value of the replicas parameter to 0."
+  # 1.1.7.1. Sample install-config.yaml file for bare metal
+  # https://access.redhat.com/documentation/en-us/openshift_container_platform/4.5/html/installing_on_bare_metal/installing-on-bare-metal#installation-initializing-manual_installing-bare-metal
   num_worker: 0
   cpu: 2
   ram: 8192
