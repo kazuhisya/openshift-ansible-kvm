@@ -8,6 +8,7 @@ This repository contains Ansible playbooks for UPI installation of OpenShift 4 o
 - Workstation, A machine that runs Ansible. It is typically your laptop
     - Ansible >= 2.9.5
 - KVM host
+    - RHEL 8.2
     - CPU with at least 4 cores
     - 80 GB or more memory recommended
 
@@ -23,6 +24,11 @@ This repository contains Ansible playbooks for UPI installation of OpenShift 4 o
 ```bash
 $ sudo dnf install -y ansible
 ```
+
+### Prepare KVM host
+
+- Just install RHEL8
+- Add workstation's ssh public key to root's `.ssh/authorized_keys`
 
 ### Make your settings
 
