@@ -46,6 +46,40 @@ spec_worker:
   ram: 8192
   disk: 150
 
+# Download URLs
+# kernel
+# for 4.2, 4.3:     rhcos-{{ ocp.version }}-x86_64-installer-kernel
+# for 4.4, 4.5:     rhcos-{{ ocp.version }}-x86_64-installer-kernel-x86_64
+# initramfs
+# for 4.2, 4.3:     rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img
+# for 4.4, 4.5:     rhcos-{{ ocp.version }}-x86_64-installer-initramfs.x86_64.img
+# bios
+# for 4.2:          rhcos-{{ ocp.version }}-x86_64-metal-bios.raw.gz
+# for 4.3:          rhcos-{{ ocp.version }}-x86_64-metal.raw.gz
+# for 4.4, 4.5:     rhcos-{{ ocp.version }}-x86_64-metal.x86_64.raw.gz
+config:
+  # rhcos_kernel:    "rhcos-{{ ocp.version }}-x86_64-installer-kernel-x86_64"
+  # rhcos_initramfs: "rhcos-{{ ocp.version }}-x86_64-installer-initramfs.x86_64.img"
+  # rhcos_bios:      "rhcos-{{ ocp.version }}-x86_64-metal.x86_64.raw.gz"
+  rhcos_kernel: >-
+    {%- if   ocp.version | regex_search("^4\.+([2-3])\.") -%}     rhcos-{{ ocp.version }}-x86_64-installer-kernel
+    {%- elif ocp.version | regex_search("^4\.+([4-5])\.") -%}     rhcos-{{ ocp.version }}-x86_64-installer-kernel-x86_64
+    {%- else -%}                                                  rhcos-{{ ocp.version }}-x86_64-installer-kernel-x86_64
+    {%- endif -%}
+  rhcos_initramfs: >-
+    {%- if   ocp.version | regex_search("^4\.+([2-3])\.") -%}     rhcos-{{ ocp.version }}-x86_64-installer-initramfs.img
+    {%- elif ocp.version | regex_search("^4\.+([4-5])\.") -%}     rhcos-{{ ocp.version }}-x86_64-installer-initramfs.x86_64.img
+    {%- else -%}                                                  rhcos-{{ ocp.version }}-x86_64-installer-initramfs.x86_64.img
+    {%- endif -%}
+  rhcos_bios: >-
+    {%- if   ocp.version | regex_search("^4\.2\.") -%}            rhcos-{{ ocp.version }}-x86_64-metal-bios.raw.gz
+    {%- elif ocp.version | regex_search("^4\.3\.") -%}            rhcos-{{ ocp.version }}-x86_64-metal.raw.gz
+    {%- elif ocp.version | regex_search("^4\.+([4-5])\.") -%}     rhcos-{{ ocp.version }}-x86_64-metal.x86_64.raw.gz
+    {%- else -%}                                                  rhcos-{{ ocp.version }}-x86_64-metal.x86_64.raw.gz
+    {%- endif -%}
+  ocp_installer:   "openshift-install-linux-{{ ocp.latest_version }}.tar.gz"
+  ocp_client:      "openshift-client-linux-{{ ocp.latest_version }}.tar.gz"
+
 url:
   rhcos_kernel_url:    "{{ static.rhcos_base_url }}/{{ config.rhcos_kernel  }}"
   rhcos_initramfs_url: "{{ static.rhcos_base_url }}/{{ config.rhcos_initramfs }}"
@@ -58,3 +92,4 @@ url:
 static:
   rhcos_base_url:   "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp.version_dir }}"
   clients_base_url: "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp.latest_version }}"
+
