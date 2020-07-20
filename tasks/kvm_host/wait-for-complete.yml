@@ -1,6 +1,6 @@
 ---
 - name: wait-for bootstrap-complete
-  command: /root/bin/openshift-install --dir=/root/ocp-upi-install/bare-metal wait-for bootstrap-complete
+  command: /root/bin/openshift-install --dir=/root/openshift-ansible-kvm/bare-metal wait-for bootstrap-complete
   async: 3600
   poll: 0
   register: bootstrap_complete_sleeper
@@ -16,14 +16,14 @@
 - name: oc path to configs.imageregistry.operator.openshift.io/cluster
   command: /root/bin/oc patch configs.imageregistry.operator.openshift.io/cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
   environment:
-    KUBECONFIG: /root/ocp-upi-install/bare-metal/auth/kubeconfig
+    KUBECONFIG: /root/openshift-ansible-kvm/bare-metal/auth/kubeconfig
   retries: 100
   delay: 10
   register: result
   until: result is not failed
 
 - name: wait-for install-complete
-  command: /root/bin/openshift-install --dir=/root/ocp-upi-install/bare-metal wait-for install-complete
+  command: /root/bin/openshift-install --dir=/root/openshift-ansible-kvm/bare-metal wait-for install-complete
   async: 3600
   poll: 0
   register: install_complete_sleeper
@@ -38,7 +38,7 @@
 
 - name: check kubeadmin-password
   slurp:
-    src: /root/ocp-upi-install/bare-metal/auth/kubeadmin-password
+    src: /root/openshift-ansible-kvm/bare-metal/auth/kubeadmin-password
   register: kubeadmin_password
 
 - name: show kubeadmin-password

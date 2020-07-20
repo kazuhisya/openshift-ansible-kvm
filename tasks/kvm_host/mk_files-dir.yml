@@ -1,5 +1,5 @@
 ---
 - name: make working dir
   file:
-    path: /root/ocp-upi-install
+    path: /root/openshift-ansible-kvm
     state: directory
