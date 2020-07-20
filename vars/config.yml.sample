@@ -1,7 +1,7 @@
 ---
 kvm_host:
-# kvm host ip and NIC's name
-# e.g. 192.168.86.100, enp2s0f0
+# KVM host IP and name of NIC
+# e.g. 192.168.0.100 (do not input 127.0.0.1), enp2s0f0
   ip: <IP addr>
   if: <IF name>
 
@@ -22,7 +22,6 @@ ocp:
   version: 4.5.2
   version_dir: 4.5/4.5.2
   latest_version: 4.5.2
-
 
 key:
 # pullsecret: '{"auths":{"cloud.openshift.com"......}}'

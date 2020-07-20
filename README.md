@@ -6,7 +6,8 @@ This repository contains Ansible playbooks for UPI installation of OpenShift 4 o
 ## Requirements
 
 - Workstation, A machine that runs Ansible. It is typically your laptop
-    - Ansible >= 2.9.5
+    - Ansible >= 2.8
+    - You can simply run ansible on the KVM host if you want. Without a workstation.
 - KVM host
     - RHEL 8.2
     - CPU with at least 4 cores
@@ -16,6 +17,7 @@ This repository contains Ansible playbooks for UPI installation of OpenShift 4 o
 
 ![openshift-ansible-kvm-architecture](docs/assets/openshift-ansible-kvm-architecture.png)
 
+It can also be run with just a KVM host, without a workstation. (In that case, install Ansible on the KVM host)
 
 ## Quickstart
 
