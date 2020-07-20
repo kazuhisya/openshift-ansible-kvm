@@ -1,19 +1,27 @@
 ---
-- virt_net:
+- name: start libvirt daemon
+  service:
+    name: libvirtd
+    state: started
+
+- name: check if ocp nat already exists
+  virt_net:
     command: list_nets
   register: all_nets
 
-- virt_net:
+- name: destroy old ocp nat
+  virt_net:
     command: destroy
     name: ocp
   when: 'ocp in all_nets.list_nets'
 
-- virt_net:
+- name: undefine old ocp nat
+  virt_net:
     command: undefine
     name: ocp
   when: 'ocp in all_nets.list_nets'
 
-- name: check if master already exists
+- name: check if vms already exists
   virt:
     command: list_vms
   register: all_vms

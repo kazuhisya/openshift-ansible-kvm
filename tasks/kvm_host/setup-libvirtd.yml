@@ -4,31 +4,31 @@
     name: libvirtd
     state: started
 
-- virt_net:
+- name: check if ocp nat already exists
+  virt_net:
     command: list_nets
   register: all_nets
 
-- virt_net:
+- name: destroy old ocp nat
+  virt_net:
     command: destroy
     name: ocp
   when: 'ocp in all_nets.list_nets'
 
-- virt_net:
+- name: undefine old ocp nat
+  virt_net:
     command: undefine
     name: ocp
   when: 'ocp in all_nets.list_nets'
 
-- virt_net:
+- name: define ocp nat
+  virt_net:
     command: define
     name: ocp
     xml: "{{lookup('file', 'files/{{ ocp.version }}/conf/libvirtd.nat-ocp.xml')}}"
 
-- virt_net:
-    command: define
-    name: ocp
-    xml: "{{lookup('file', 'files/{{ ocp.version }}/conf/libvirtd.nat-ocp.xml')}}"
-
-- virt_net:
+- name: start ocp nat
+  virt_net:
     command: create
     name: ocp
     state: active
