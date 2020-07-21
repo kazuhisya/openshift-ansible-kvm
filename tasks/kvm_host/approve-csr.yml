@@ -1,0 +1,21 @@
+---
+- name: check csr status
+  command: /root/bin/oc get csr
+  environment:
+    KUBECONFIG: /root/openshift-ansible-kvm/bare-metal/auth/kubeconfig
+  register: result
+  ignore_errors: yes
+
+- name: load target
+  shell: >-
+    /root/bin/oc get csr | grep Pending |awk '{ print $1 }'
+  environment:
+    KUBECONFIG: /root/openshift-ansible-kvm/bare-metal/auth/kubeconfig
+  register: result
+  ignore_errors: yes
+
+- name: approve csr
+  command: "/root/bin/oc adm certificate approve {{ item }}"
+  environment:
+    KUBECONFIG: /root/openshift-ansible-kvm/bare-metal/auth/kubeconfig
+  with_items: "{{ result.stdout_lines }}"
