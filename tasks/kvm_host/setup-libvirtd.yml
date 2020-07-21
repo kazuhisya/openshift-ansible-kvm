@@ -13,13 +13,13 @@
   virt_net:
     command: destroy
     name: ocp
-  when: 'ocp in all_nets.list_nets'
+  when: "'ocp' in all_nets.list_nets"
 
 - name: undefine old ocp nat
   virt_net:
     command: undefine
     name: ocp
-  when: 'ocp in all_nets.list_nets'
+  when: "'ocp' in all_nets.list_nets"
 
 - name: define ocp nat
   virt_net:
