@@ -1,13 +1,16 @@
 ---
-- name: install the latest version of libvirt, dnsmasq and nginx
+- name: install libvirt, dnsmasq, nginx and related packages
   dnf:
     name:
       - libvirt-client
-      - libvirt-daemon
+      - libvirt
+      - qemu-kvm
       - virt-install
       - dnsmasq
       - nginx
       - python3-lxml
       - python3-libselinux
       - python3-policycoreutils
+      - tar
+      - unzip
     state: latest
