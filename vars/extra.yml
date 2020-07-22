@@ -33,13 +33,13 @@ worker:
 
 spec_bootstrap:
   cpu: 4
-  ram: 12288
-  disk: 150
+  ram: 16384
+  disk: 128
 spec_master:
   num_master: 3
   cpu: 4
-  ram: 12288
-  disk: 150
+  ram: 16384
+  disk: 128
 spec_worker:
   # "You must set the value of the replicas parameter to 0."
   # 1.1.7.1. Sample install-config.yaml file for bare metal
@@ -47,7 +47,7 @@ spec_worker:
   num_worker: 0
   cpu: 2
   ram: 8192
-  disk: 150
+  disk: 128
 
 # Download URLs
 # kernel

@@ -13,7 +13,8 @@ This repository contains Ansible playbooks for UPI installation of OpenShift 4 o
     - RHEL 8.2
     - CPU with at least 4 cores
     - Memory with at least 80 GB
-        - It will work with about 64 GB, but we don't recommend it.
+        - It will work with about 64 GB with memory overcommit, but we don't recommend it.
+    - Check [resource requirements](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.5/html/installing_on_bare_metal/installing-on-bare-metal#installation-requirements-user-infra_installing-bare-metal) for more details.
 
 ## Architecture
 
