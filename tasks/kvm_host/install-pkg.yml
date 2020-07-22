@@ -8,4 +8,6 @@
       - dnsmasq
       - nginx
       - python3-lxml
+      - python3-libselinux
+      - python3-policycoreutils
     state: latest
