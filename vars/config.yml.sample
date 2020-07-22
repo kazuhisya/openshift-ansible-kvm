@@ -25,7 +25,7 @@ ocp:
 
 key:
 # pullsecret: '{"auths":{"cloud.openshift.com"......}}'
-# sshkey: '<your ssh pub key>'
+# sshkey: 'ssh-rsa AAAABBB.....'
   pullsecret: ''
   sshkey: ''
 
