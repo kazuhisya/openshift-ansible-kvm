@@ -81,3 +81,6 @@ Other ways, you can use [sshuttle](https://fedoramagazine.org/use-sshuttle-to-bu
 $ ansible-playbook ./03_cleanup.yml
 ```
 
+## Special Thanks
+
+This project started with inspiration from [openshift-fast-install](https://github.com/konono/openshift-fast-install).
