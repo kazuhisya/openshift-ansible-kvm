@@ -1,5 +1,5 @@
 ---
-- name: Allow nginx(http_port_t) to listen on extra tcp ports
+- name: allow nginx(http_port_t) to listen on extra tcp ports
   seport:
     ports: "{{ item }}"
     proto: tcp
@@ -10,7 +10,7 @@
       - "8000"
       - "22623"
 
-- name: Set seboolean flag on and keep it persistent across reboots
+- name: set seboolean flag on and keep it persistent across reboots
   seboolean:
     name: "{{ item }}"
     state: yes
