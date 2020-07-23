@@ -36,6 +36,7 @@
     serole: object_r
     setype: httpd_sys_content_t
     seuser: system_u
+    mode: 0644
   with_items:
     - "{{ config.rhcos_kernel }}"
     - "{{ config.rhcos_initramfs }}"
