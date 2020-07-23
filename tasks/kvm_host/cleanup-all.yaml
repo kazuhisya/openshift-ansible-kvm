@@ -30,21 +30,21 @@
   shell: |
     virsh destroy {{ item.name }}
     virsh undefine --remove-all-storage {{ item.name }}
-  when: 'item.name  in all_vms.list_vms'
+  when: 'item.name in all_vms.list_vms'
   with_items: "{{ bootstrap }}"
 
 - name: destroy old master
   shell: |
     virsh destroy {{ item.name }}
     virsh undefine --remove-all-storage {{ item.name }}
-  when: 'item.name  in all_vms.list_vms'
+  when: 'item.name in all_vms.list_vms'
   with_items: "{{ master }}"
 
 - name: destroy old worker
   shell: |
     virsh destroy {{ item.name }}
     virsh undefine --remove-all-storage {{ item.name }}
-  when: 'item.name  in all_vms.list_vms'
+  when: 'item.name in all_vms.list_vms'
   with_items: "{{ worker }}"
 
 - name: stop libvirt daemon
@@ -61,3 +61,36 @@
   service:
     name: nginx
     state: stopped
+
+- name: check old bare-metal dir
+  stat:
+    path: "/root/openshift-ansible-kvm"
+  register: chk_file
+
+- name: remove old working dir
+  file:
+    path: /root/openshift-ansible-kvm
+    state: absent
+  when: chk_file.stat.exists == true
+
+- name: check old hosts.ocp for dnsmasq
+  stat:
+    path: "/etc/hosts.ocp"
+  register: chk_file
+
+- name: remove old /etc/hosts.ocp for dnsmasq
+  file:
+    path: /etc/hosts.ocp
+    state: absent
+  when: chk_file.stat.exists == true
+
+- name: check old dnsmasq.d/ocp.conf
+  stat:
+    path: "/etc/dnsmasq.d/ocp.conf"
+  register: chk_file
+
+- name: remove old dnsmasq.d/ocp.conf
+  file:
+    path: /etc/dnsmasq.d/ocp.conf
+    state: absent
+  when: chk_file.stat.exists == true
