@@ -94,3 +94,11 @@
     path: /etc/dnsmasq.d/ocp.conf
     state: absent
   when: chk_file.stat.exists == true
+
+- name: remove old nginx dir
+  file:
+    path: "/usr/share/nginx/html/{{ item }}"
+    state: absent
+  with_items:
+    - ipxe
+    - ocp
