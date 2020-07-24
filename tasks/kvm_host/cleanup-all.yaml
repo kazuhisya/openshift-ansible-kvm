@@ -62,7 +62,7 @@
     name: nginx
     state: stopped
 
-- name: check old bare-metal dir
+- name: check old working dir
   stat:
     path: "/root/openshift-ansible-kvm"
   register: chk_file
@@ -71,7 +71,9 @@
   file:
     path: /root/openshift-ansible-kvm
     state: absent
-  when: chk_file.stat.exists == true
+  when:
+    - chk_file.stat.exists == true
+    - cleanup.conf == true
 
 - name: check old hosts.ocp for dnsmasq
   stat:
@@ -82,7 +84,9 @@
   file:
     path: /etc/hosts.ocp
     state: absent
-  when: chk_file.stat.exists == true
+  when:
+    - chk_file.stat.exists == true
+    - cleanup.conf == true
 
 - name: check old dnsmasq.d/ocp.conf
   stat:
@@ -93,4 +97,31 @@
   file:
     path: /etc/dnsmasq.d/ocp.conf
     state: absent
-  when: chk_file.stat.exists == true
+  when:
+    - chk_file.stat.exists == true
+    - cleanup.conf == true
+
+# want fix: maybe we need Implementation of file stat before deletion
+- name: remove old nginx dir
+  file:
+    path: "/usr/share/nginx/html/{{ item }}"
+    state: absent
+  with_items:
+    - ipxe
+    - ocp
+  when:
+    - cleanup.bin == true
+  ignore_errors: yes
+
+# want fix: maybe we need Implementation of file stat before deletion
+- name: remove old clients
+  file:
+    path: "/root/bin/{{ item }}"
+    state: absent
+  with_items:
+    - kubectl
+    - oc
+    - openshift-install
+  when:
+    - cleanup.bin == true
+  ignore_errors: yes
