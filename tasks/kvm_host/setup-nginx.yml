@@ -29,7 +29,7 @@
     setype: httpd_sys_content_t
     seuser: system_u
     mode: 0755
-    
+
 - name: send rhcos to kvm host
   copy:
     src:  "files/{{ ocp.version }}/dependencies/{{ item }}"
