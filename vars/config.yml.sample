@@ -29,3 +29,12 @@ key:
   pullsecret: ''
   sshkey: ''
 
+# You can stay the configurations and binaries on the kvm host when you run the cleanup.
+#  conf: configuration files. e.g. dnsmasq, install-config.yaml, etc...
+#  bin:  binary files. e.g. initramfs, oc client, etc ...
+#    true:  remove old files
+#    false: stay old files
+cleanup:
+  conf: true
+  bin: false
+
