@@ -34,7 +34,7 @@
     --arch x86_64
     --os-type linux
     --os-variant rhel8.0
-    --network network=ocp,mac="52:54:00:00:01:{{item.mac}}"
+    --network network=openshift,mac="52:54:00:00:01:{{item.mac}}"
     --vcpus {{spec_master.cpu}}
     --ram {{spec_master.ram}}
     --disk pool=default,size={{spec_master.disk}},format=qcow2

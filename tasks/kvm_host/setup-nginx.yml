@@ -1,7 +1,7 @@
 ---
 - name: send nginx config to kvm host
   copy:
-    src:  "files/{{ ocp.version }}/conf/nginx.conf"
+    src:  "files/{{ openshift.version }}/conf/nginx.conf"
     dest: /etc/nginx/nginx.conf
     selevel: s0
     serole: object_r
@@ -21,7 +21,7 @@
 
 - name: make nginx ignitions dir
   file:
-    path: /usr/share/nginx/html/ocp/rhcos/ignitions
+    path: /usr/share/nginx/html/openshift/coreos/ignitions
     state: directory
     recurse: yes
     selevel: s0
@@ -30,9 +30,9 @@
     seuser: system_u
     mode: 0755
 
-- name: send rhcos to kvm host
+- name: send coreos to kvm host
   copy:
-    src:  "files/{{ ocp.version }}/dependencies/{{ item }}"
+    src:  "files/{{ openshift.version }}/dependencies/{{ item }}"
     dest: /usr/share/nginx/html/ipxe/
     selevel: s0
     serole: object_r
@@ -40,13 +40,23 @@
     seuser: system_u
     mode: 0644
   with_items:
-    - "{{ config.rhcos_kernel }}"
-    - "{{ config.rhcos_initramfs }}"
-    - "{{ config.rhcos_bios }}"
+    - "{{ config.coreos_kernel }}"
+    - "{{ config.coreos_initramfs }}"
+    - "{{ config.coreos_bios }}"
 
-- name: send rhcos to kvm host
+- name: send coreos signature to kvm host
   copy:
-    src:  "files/{{ ocp.version }}/conf/{{ item }}"
+    src:  "files/{{ openshift.version }}/dependencies/{{ config.coreos_bios }}.sig"
+    dest: /usr/share/nginx/html/ipxe/
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+  when: openshift.dist == "okd"
+
+- name: send coreos to kvm host
+  copy:
+    src:  "files/{{ openshift.version }}/conf/{{ item }}"
     dest: /usr/share/nginx/html/ipxe/
     selevel: s0
     serole: object_r

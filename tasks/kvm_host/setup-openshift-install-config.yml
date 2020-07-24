@@ -22,18 +22,18 @@
 
 - name: send install-config.yaml to kvm host
   copy:
-    src:  "files/{{ ocp.version }}/conf/install-config.yaml"
+    src:  "files/{{ openshift.version }}/conf/install-config.yaml"
     dest: /root/openshift-ansible-kvm/bare-metal
 
-- name: send ocp installer
+- name: send openshift installer
   unarchive:
-    src: "files/{{ ocp.version }}/clients/{{ config.ocp_installer }}"
+    src: "files/{{ openshift.version }}/clients/{{ config.openshift_installer }}"
     dest: /root/bin
     exclude: README.md
 
-- name: send ocp clients
+- name: send openshift clients
   unarchive:
-    src: "files/{{ ocp.version }}/clients/{{ config.ocp_client }}"
+    src: "files/{{ openshift.version }}/clients/{{ config.openshift_client }}"
     dest: /root/bin
     exclude: README.md
 
@@ -43,7 +43,7 @@
 - name: copy ign files
   copy:
     src:  /root/openshift-ansible-kvm/bare-metal/{{ item }}
-    dest: /usr/share/nginx/html/ocp/rhcos/ignitions
+    dest: /usr/share/nginx/html/openshift/coreos/ignitions
     selevel: s0
     serole: object_r
     setype: httpd_sys_content_t

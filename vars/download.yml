@@ -1,0 +1,59 @@
+---
+# Download URLs
+# kernel
+# for 4.2, 4.3: rhcos-{{ openshift.version }}-x86_64-installer-kernel
+# for 4.4, 4.5: rhcos-{{ openshift.version }}-x86_64-installer-kernel-x86_64
+# initramfs
+# for 4.2, 4.3: rhcos-{{ openshift.version }}-x86_64-installer-initramfs.img
+# for 4.4, 4.5: rhcos-{{ openshift.version }}-x86_64-installer-initramfs.x86_64.img
+# bios
+# for 4.2:      rhcos-{{ openshift.version }}-x86_64-metal-bios.raw.gz
+# for 4.3:      rhcos-{{ openshift.version }}-x86_64-metal.raw.gz
+# for 4.4, 4.5: rhcos-{{ openshift.version }}-x86_64-metal.x86_64.raw.gz
+config:
+  # coreos_kernel:    "rhcos-{{ openshift.version }}-x86_64-installer-kernel-x86_64"
+  # coreos_initramfs: "rhcos-{{ openshift.version }}-x86_64-installer-initramfs.x86_64.img"
+  # coreos_bios:      "rhcos-{{ openshift.version }}-x86_64-metal.x86_64.raw.gz"
+  coreos_kernel: >-
+    {%- if   openshift.dist == 'okd' -%}                            fedora-coreos-{{ openshift.version }}-live-kernel-x86_64
+    {%- elif openshift.version | regex_search("^4\.+([2-3])\.") -%} rhcos-{{ openshift.version }}-x86_64-installer-kernel
+    {%- elif openshift.version | regex_search("^4\.+([4-5])\.") -%} rhcos-{{ openshift.version }}-x86_64-installer-kernel-x86_64
+    {%- else -%}                                                    rhcos-{{ openshift.version }}-x86_64-installer-kernel-x86_64
+    {%- endif -%}
+  coreos_initramfs: >-
+    {%- if   openshift.dist == 'okd' -%}                            fedora-coreos-{{ openshift.version }}-live-initramfs.x86_64.img
+    {%- elif openshift.version | regex_search("^4\.+([2-3])\.") -%} rhcos-{{ openshift.version }}-x86_64-installer-initramfs.img
+    {%- elif openshift.version | regex_search("^4\.+([4-5])\.") -%} rhcos-{{ openshift.version }}-x86_64-installer-initramfs.x86_64.img
+    {%- else -%}                                                    rhcos-{{ openshift.version }}-x86_64-installer-initramfs.x86_64.img
+    {%- endif -%}
+  coreos_bios: >-
+    {%- if   openshift.dist == 'okd' -%}                            fedora-coreos-{{ openshift.version }}-metal.x86_64.raw.xz
+    {%- elif openshift.version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.version }}-x86_64-metal-bios.raw.gz
+    {%- elif openshift.version | regex_search("^4\.3\.") -%}        rhcos-{{ openshift.version }}-x86_64-metal.raw.gz
+    {%- elif openshift.version | regex_search("^4\.+([4-5])\.") -%} rhcos-{{ openshift.version }}-x86_64-metal.x86_64.raw.gz
+    {%- else -%}                                                    rhcos-{{ openshift.version }}-x86_64-metal.x86_64.raw.gz
+    {%- endif -%}
+  openshift_installer: "openshift-install-linux-{{ openshift.latest_version }}.tar.gz"
+  openshift_client:    "openshift-client-linux-{{ openshift.latest_version }}.tar.gz"
+
+url:
+  coreos_kernel_url:       "{{ static.coreos_base_url }}/{{ config.coreos_kernel  }}"
+  coreos_initramfs_url:    "{{ static.coreos_base_url }}/{{ config.coreos_initramfs }}"
+  coreos_bios_url:         "{{ static.coreos_base_url }}/{{ config.coreos_bios }}"
+  openshift_installer_url: "{{ static.clients_base_url }}/{{ config.openshift_installer }}"
+  openshift_client_url:    "{{ static.clients_base_url }}/{{ config.openshift_client }}"
+  sha256_dep_url:          "{{ static.coreos_base_url }}/sha256sum.txt"
+  sha256_client_url:       "{{ static.clients_base_url }}/sha256sum.txt"
+
+static:
+  coreos_base_url: >-
+    {%- if   openshift.dist == 'okd' -%} https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/{{ openshift.version }}/x86_64
+    {%- elif openshift.dist == 'ocp' -%} https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ openshift.version_dir }}
+    {%- else -%}                         https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ openshift.version_dir }}
+    {%- endif -%}
+  clients_base_url: >-
+    {%- if   openshift.dist == 'okd' -%} https://github.com/openshift/okd/releases/download/{{ openshift.latest_version }}
+    {%- elif openshift.dist == 'ocp' -%} https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ openshift.latest_version }}
+    {%- else -%}                         https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ openshift.latest_version }}
+    {%- endif -%}
+

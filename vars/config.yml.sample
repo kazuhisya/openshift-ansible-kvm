@@ -1,31 +1,42 @@
 ---
-kvm_host:
 # KVM host IP and name of NIC
 # e.g. 192.168.0.100 (do not input 127.0.0.1), enp2s0f0
+kvm_host:
   ip: <IP addr>
   if: <IF name>
 
-ocp:
-# --- 4.2 ---------------
+# OpenShift environment settings
+#  dist: Select a distribution to deploy "ocp" or "okd"
+# --- OCP 4.2 -----------
 #  version: 4.2.0
 #  version_dir: 4.2/4.2.0
 #  latest_version: 4.2.16
-# --- 4.3 ---------------
+# --- OCP 4.3 -----------
 #  version: 4.3.0
 #  version_dir: 4.3/4.3.0
 #  latest_version: 4.3.0
-# --- 4.4 ---------------
+# --- OCP 4.4 -----------
 #  version: 4.4.3
 #  version_dir: 4.4/4.4.3
 #  latest_version: 4.4.11
-# --- 4.5 ---------------
+# --- OCO 4.5 -----------
+#  version: 4.5.2
+#  version_dir: 4.5/4.5.2
+#  latest_version: 4.5.2
+# --- OKD 4 --------------
+#  version: 32.20200629.3.0
+#  version_dir: 
+#  latest_version: 4.5.0-0.okd-2020-07-14-153706-ga
+# ------------------------
+openshift:
+  dist: ocp
   version: 4.5.2
   version_dir: 4.5/4.5.2
   latest_version: 4.5.2
 
-key:
 # pullsecret: '{"auths":{"cloud.openshift.com"......}}'
 # sshkey: 'ssh-rsa AAAABBB.....'
+key:
   pullsecret: ''
   sshkey: ''
 

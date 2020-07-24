@@ -4,31 +4,31 @@
     name: libvirtd
     state: started
 
-- name: check if ocp nat already exists
+- name: check if openshift nat already exists
   virt_net:
     command: list_nets
   register: all_nets
 
-- name: destroy old ocp nat
+- name: destroy old openshift nat
   virt_net:
     command: destroy
-    name: ocp
-  when: "'ocp' in all_nets.list_nets"
+    name: openshift
+  when: "'openshift' in all_nets.list_nets"
 
-- name: undefine old ocp nat
+- name: undefine old openshift nat
   virt_net:
     command: undefine
-    name: ocp
-  when: "'ocp' in all_nets.list_nets"
+    name: openshift
+  when: "'openshift' in all_nets.list_nets"
 
-- name: define ocp nat
+- name: define openshift nat
   virt_net:
     command: define
-    name: ocp
-    xml: "{{lookup('file', 'files/{{ ocp.version }}/conf/libvirtd.nat-ocp.xml')}}"
+    name: openshift
+    xml: "{{lookup('file', 'files/{{ openshift.version }}/conf/libvirtd.nat-openshift.xml')}}"
 
-- name: start ocp nat
+- name: start openshift nat
   virt_net:
     command: create
-    name: ocp
+    name: openshift
     state: active

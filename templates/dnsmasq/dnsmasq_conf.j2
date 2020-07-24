@@ -5,4 +5,4 @@ address=/apps.{{ net.subdomain }}.{{ net.domain }}/{{ kvm_host.ip }}
 {% for m in master %}
 srv-host=_etcd-server-ssl._tcp.{{ net.subdomain }}.{{ net.domain }},{{ m.name }}.{{ net.subdomain }}.{{ net.domain }},2380,0,10
 {% endfor %}
-addn-hosts=/etc/hosts.ocp
+addn-hosts=/etc/hosts.openshift
