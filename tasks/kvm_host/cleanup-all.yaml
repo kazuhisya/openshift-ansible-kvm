@@ -4,22 +4,22 @@
     name: libvirtd
     state: started
 
-- name: check if ocp nat already exists
+- name: check if openshift nat already exists
   virt_net:
     command: list_nets
   register: all_nets
 
-- name: destroy old ocp nat
+- name: destroy old openshift nat
   virt_net:
     command: destroy
-    name: ocp
-  when: "'ocp' in all_nets.list_nets"
+    name: openshift
+  when: "'openshift' in all_nets.list_nets"
 
-- name: undefine old ocp nat
+- name: undefine old openshift nat
   virt_net:
     command: undefine
-    name: ocp
-  when: "'ocp' in all_nets.list_nets"
+    name: openshift
+  when: "'openshift' in all_nets.list_nets"
 
 - name: check if vms already exists
   virt:
@@ -75,27 +75,27 @@
     - chk_file.stat.exists == true
     - cleanup.conf == true
 
-- name: check old hosts.ocp for dnsmasq
+- name: check old hosts.openshift for dnsmasq
   stat:
-    path: "/etc/hosts.ocp"
+    path: "/etc/hosts.openshift"
   register: chk_file
 
-- name: remove old /etc/hosts.ocp for dnsmasq
+- name: remove old /etc/hosts.openshift for dnsmasq
   file:
-    path: /etc/hosts.ocp
+    path: /etc/hosts.openshift
     state: absent
   when:
     - chk_file.stat.exists == true
     - cleanup.conf == true
 
-- name: check old dnsmasq.d/ocp.conf
+- name: check old dnsmasq.d/openshift.conf
   stat:
-    path: "/etc/dnsmasq.d/ocp.conf"
+    path: "/etc/dnsmasq.d/openshift.conf"
   register: chk_file
 
-- name: remove old dnsmasq.d/ocp.conf
+- name: remove old dnsmasq.d/openshift.conf
   file:
-    path: /etc/dnsmasq.d/ocp.conf
+    path: /etc/dnsmasq.d/openshift.conf
     state: absent
   when:
     - chk_file.stat.exists == true
@@ -108,7 +108,7 @@
     state: absent
   with_items:
     - ipxe
-    - ocp
+    - openshift
   when:
     - cleanup.bin == true
   ignore_errors: yes

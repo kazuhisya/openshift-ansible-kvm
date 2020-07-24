@@ -2,7 +2,8 @@
 - hosts: kvm_host
   vars_files:
     - vars/config.yml
-    - vars/extra.yml
+    - vars/vm_setting.yml
+    - vars/download.yml
 
   tasks:
     - include_tasks: tasks/kvm_host/mk_files-dir.yml
@@ -12,7 +13,7 @@
     - include_tasks: tasks/kvm_host/setup-dnsmasq.yml
     - include_tasks: tasks/kvm_host/setup-libvirtd.yml
     - include_tasks: tasks/kvm_host/setup-nginx.yml
-    - include_tasks: tasks/kvm_host/setup-ocp-install-config.yml
+    - include_tasks: tasks/kvm_host/setup-openshift-install-config.yml
     - include_tasks: tasks/kvm_host/install-bootstrap.yml
     - include_tasks: tasks/kvm_host/install-master.yml
     - include_tasks: tasks/kvm_host/install-worker.yml

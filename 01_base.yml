@@ -2,7 +2,8 @@
 - hosts: base
   vars_files:
     - vars/config.yml
-    - vars/extra.yml
+    - vars/vm_setting.yml
+    - vars/download.yml
 
   tasks:
     - include_tasks: tasks/base/mk_files-dir.yml
@@ -10,6 +11,6 @@
     - include_tasks: tasks/base/mk_libvirtd-conf.yml
     - include_tasks: tasks/base/mk_nginx-conf.yml
     - include_tasks: tasks/base/mk_boot-ipxe-cfg.yml
-    - include_tasks: tasks/base/mk_ocp-install-config.yml
+    - include_tasks: tasks/base/mk_openshift-install-config.yml
     - include_tasks: tasks/base/get_materials.yml
 

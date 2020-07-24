@@ -1,5 +1,5 @@
 ---
-- name: make libvirtd/nat-ocp.conf
+- name: make libvirtd/nat-openshift.conf
   template:
-    src:  templates/libvirtd/nat-ocp.j2
-    dest: "files/{{ ocp.version }}/conf/libvirtd.nat-ocp.xml"
+    src:  templates/libvirtd/nat-openshift.j2
+    dest: "files/{{ openshift.version }}/conf/libvirtd.nat-openshift.xml"

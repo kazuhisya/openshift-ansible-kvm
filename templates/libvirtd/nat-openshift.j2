@@ -1,6 +1,6 @@
 <network>
-  <name>ocp</name>
-  <bridge name='ocp0' stp='yes' delay='0'/>
+  <name>openshift</name>
+  <bridge name='openshift0' stp='yes' delay='0'/>
   <forward dev='{{ kvm_host.if }}' mode='nat'>
     <nat>
       <port start='1024' end='65535'/>
