@@ -2,6 +2,7 @@
 
 This repository contains Ansible playbooks for UPI installation of OpenShift 4 on KVM.
 
+It supports both [OpenShift Container Platform 4(OCP4)](https://www.openshift.com/) and [OKD 4](https://www.okd.io/) deployments.
 
 ## Requirements
 
@@ -43,7 +44,7 @@ At least change the following settings are **required** .
 - vars/config.yml
     - `kvm_host.ip` : Your KVM host IP
     - `kvm_host.if` : Your KVM host IF name (e.g. `enp2s0f0` )
-    - `pullsecret`  : Get KVM [cloud.redhat.com](https://cloud.redhat.com/openshift/install/metal/user-provisioned)
+    - `pullsecret`  : Get form [cloud.redhat.com](https://cloud.redhat.com/openshift/install/metal/user-provisioned)
     - `sshkey`      : Your ssh pub key
 - inventory/hosts
     - `kvm_host`    : Your KVM host IP (or localhost)
@@ -83,4 +84,4 @@ $ ansible-playbook ./03_cleanup.yml
 
 ## Special Thanks
 
-This project started with inspiration from [openshift-fast-install](https://github.com/konono/openshift-fast-install).
+This project started with inspiration from openshift-fast-install. ( [the original version](https://github.com/konono/openshift-fast-install) and [the forked version](https://github.com/masaki-furuta/openshift-fast-install) )
