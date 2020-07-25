@@ -2,13 +2,13 @@
 - name: fetch kubeadmin-password from kvm host
   fetch:
     src:  /root/openshift-ansible-kvm/bare-metal/auth/kubeadmin-password
-    dest: files/{{ openshift.version }}/conf/
+    dest: files/{{ openshift.install_version }}/conf/
     flat: yes
 
 - name: fetch kubeconfig from kvm host
   fetch:
     src:  /root/openshift-ansible-kvm/bare-metal/auth/kubeconfig
-    dest: files/{{ openshift.version }}/conf/
+    dest: files/{{ openshift.install_version }}/conf/
     flat: yes
 
 - name: wait-for bootstrap-complete

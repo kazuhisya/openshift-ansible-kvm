@@ -1,7 +1,7 @@
 ---
 - name: send nginx config to kvm host
   copy:
-    src:  "files/{{ openshift.version }}/conf/nginx.conf"
+    src:  "files/{{ openshift.install_version }}/conf/nginx.conf"
     dest: /etc/nginx/nginx.conf
     selevel: s0
     serole: object_r
@@ -32,7 +32,7 @@
 
 - name: send coreos to kvm host
   copy:
-    src:  "files/{{ openshift.version }}/dependencies/{{ item }}"
+    src:  "files/{{ openshift.install_version }}/dependencies/{{ item }}"
     dest: /usr/share/nginx/html/ipxe/
     selevel: s0
     serole: object_r
@@ -46,7 +46,7 @@
 
 - name: send coreos signature to kvm host
   copy:
-    src:  "files/{{ openshift.version }}/dependencies/{{ config.coreos_bios }}.sig"
+    src:  "files/{{ openshift.install_version }}/dependencies/{{ config.coreos_bios }}.sig"
     dest: /usr/share/nginx/html/ipxe/
     selevel: s0
     serole: object_r
@@ -56,7 +56,7 @@
 
 - name: send coreos to kvm host
   copy:
-    src:  "files/{{ openshift.version }}/conf/{{ item }}"
+    src:  "files/{{ openshift.install_version }}/conf/{{ item }}"
     dest: /usr/share/nginx/html/ipxe/
     selevel: s0
     serole: object_r

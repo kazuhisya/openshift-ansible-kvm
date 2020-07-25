@@ -1,20 +1,20 @@
 ---
 - name: make files dir
   file:
-    path: "files/{{ openshift.version }}"
+    path: "files/{{ openshift.install_version }}"
     state: directory
 
 - name: make files/clients dir
   file:
-    path: "files/{{ openshift.version }}/clients"
+    path: "files/{{ openshift.install_version }}/clients"
     state: directory
 
 - name: make files/dependencies dir
   file:
-    path: "files/{{ openshift.version }}/dependencies"
+    path: "files/{{ openshift.install_version }}/dependencies"
     state: directory
 
 - name: make files/conf dir
   file:
-    path: "files/{{ openshift.version }}/conf"
+    path: "files/{{ openshift.install_version }}/conf"
     state: directory

@@ -22,18 +22,18 @@
 
 - name: send install-config.yaml to kvm host
   copy:
-    src:  "files/{{ openshift.version }}/conf/install-config.yaml"
+    src:  "files/{{ openshift.install_version }}/conf/install-config.yaml"
     dest: /root/openshift-ansible-kvm/bare-metal
 
 - name: send openshift installer
   unarchive:
-    src: "files/{{ openshift.version }}/clients/{{ config.openshift_installer }}"
+    src: "files/{{ openshift.install_version }}/clients/{{ config.openshift_installer }}"
     dest: /root/bin
     exclude: README.md
 
 - name: send openshift clients
   unarchive:
-    src: "files/{{ openshift.version }}/clients/{{ config.openshift_client }}"
+    src: "files/{{ openshift.install_version }}/clients/{{ config.openshift_client }}"
     dest: /root/bin
     exclude: README.md
 

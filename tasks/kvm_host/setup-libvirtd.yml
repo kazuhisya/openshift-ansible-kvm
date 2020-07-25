@@ -25,7 +25,7 @@
   virt_net:
     command: define
     name: openshift
-    xml: "{{lookup('file', 'files/{{ openshift.version }}/conf/libvirtd.nat-openshift.xml')}}"
+    xml: "{{lookup('file', 'files/{{ openshift.install_version }}/conf/libvirtd.nat-openshift.xml')}}"
 
 - name: start openshift nat
   virt_net:
