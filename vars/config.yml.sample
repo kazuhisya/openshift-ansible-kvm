@@ -20,7 +20,7 @@ kvm_host:
 #  install_version: 4.3.29
 #  coreos_version:  4.3.8
 # --- OCP 4.4 -------------
-#  install_version: 4.4.14
+#  install_version: 4.4.13
 #  coreos_version:  4.4.3
 # --- OCO 4.5 -------------
 #  install_version: 4.5.2
@@ -31,8 +31,8 @@ kvm_host:
 # -------------------------
 openshift:
   dist: ocp
-  coreos_version:  4.5.2
   install_version: 4.5.2
+  coreos_version:  4.5.2
 
 # pullsecret: '{"auths":{"cloud.openshift.com"......}}'
 # sshkey: 'ssh-rsa AAAABBB.....'
@@ -47,5 +47,5 @@ key:
 #    false: stay old files
 cleanup:
   conf: true
-  bin: false
+  bin:  false
 

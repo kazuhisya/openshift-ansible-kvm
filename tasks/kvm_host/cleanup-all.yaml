@@ -64,12 +64,12 @@
 
 - name: check old working dir
   stat:
-    path: "/root/openshift-ansible-kvm"
+    path: "{{ files.kvm }}"
   register: chk_file
 
 - name: remove old working dir
   file:
-    path: /root/openshift-ansible-kvm
+    path: "{{ files.kvm }}"
     state: absent
   when:
     - chk_file.stat.exists == true

@@ -6,43 +6,43 @@
 
 - name: check old bare-metal dir
   stat:
-    path: "/root/openshift-ansible-kvm/bare-metal"
+    path: "{{ files.kvm }}/bare-metal"
   register: chk_file
 
 - name: remove old bare-metal dir
   file:
-    path: /root/openshift-ansible-kvm/bare-metal
+    path: "{{ files.kvm }}/bare-metal"
     state: absent
   when: chk_file.stat.exists == true
 
 - name: make bare-metal dir
   file:
-    path: /root/openshift-ansible-kvm/bare-metal
+    path: "{{ files.kvm }}/bare-metal"
     state: directory
 
 - name: send install-config.yaml to kvm host
   copy:
-    src:  "files/{{ openshift.install_version }}/conf/install-config.yaml"
-    dest: /root/openshift-ansible-kvm/bare-metal
+    src:  "{{ files.base }}/conf/install-config.yaml"
+    dest: "{{ files.kvm }}/bare-metal"
 
 - name: send openshift installer
   unarchive:
-    src: "files/{{ openshift.install_version }}/clients/{{ config.openshift_installer }}"
+    src: "{{ files.base }}/clients/{{ config.openshift_installer }}"
     dest: /root/bin
     exclude: README.md
 
 - name: send openshift clients
   unarchive:
-    src: "files/{{ openshift.install_version }}/clients/{{ config.openshift_client }}"
+    src: "{{ files.base }}/clients/{{ config.openshift_client }}"
     dest: /root/bin
     exclude: README.md
 
 - name: create ignition-configs
-  command: /root/bin/openshift-install create ignition-configs --dir=/root/openshift-ansible-kvm/bare-metal
+  command: "/root/bin/openshift-install create ignition-configs --dir={{ files.kvm }}/bare-metal"
 
 - name: copy ign files
   copy:
-    src:  /root/openshift-ansible-kvm/bare-metal/{{ item }}
+    src:  "{{ files.kvm }}/bare-metal/{{ item }}"
     dest: /usr/share/nginx/html/openshift/coreos/ignitions
     selevel: s0
     serole: object_r

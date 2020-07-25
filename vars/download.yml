@@ -6,30 +6,34 @@
 version:
   minor: "{{ openshift.coreos_version | regex_replace('^(\\d*\\.\\d*)\\.\\d*','\\1') }}"
 
+# Download path
+files:
+  base: "files/{{ openshift.dist }}/{{ openshift.install_version }}"
+  kvm:  "/root/openshift-ansible-kvm"
+
 # Download URLs
 # kernel
-# for 4.2, 4.3: rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
-# for 4.4, 4.5: rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+#  for 4.2:     rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
+#  for 4.3-4.5: rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+#  for okd:     fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
 # initramfs
-# for 4.2, 4.3: rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
-# for 4.4, 4.5: rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+#  for 4.2:     rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
+#  for 4.3-4.5: rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+#  for okd:     fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
 # bios
-# for 4.2:      rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
-# for 4.3:      rhcos-{{ openshift.coreos_version }}-x86_64-metal.raw.gz
-# for 4.4, 4.5: rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
-# coreos_kernel:    "rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64"
-# coreos_initramfs: "rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img"
-# coreos_bios:      "rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz"
+#  for 4.2:     rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
+#  for 4.4-4.5: rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
+#  for okd:     fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
 config:
   coreos_kernel: >-
     {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%} rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
+    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
     {%- elif openshift.coreos_version | regex_search("^4\.+([3-5])\.") -%} rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
     {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
     {%- endif -%}
   coreos_initramfs: >-
     {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
-    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%} rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
+    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
     {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%} rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
     {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
     {%- endif -%}

@@ -2,7 +2,7 @@
 - name: make ipxe/boot.ipxe.ROLE
   template:
     src:  templates/ipxe/boot-ipxe-cfg.j2
-    dest: "files/{{ openshift.install_version }}/conf/boot.ipxe.{{ item }}"
+    dest: "{{ files.base }}/conf/boot.ipxe.{{ item }}"
   with_items:
     - bootstrap
     - master
