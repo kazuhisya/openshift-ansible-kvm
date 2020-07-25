@@ -1,5 +1,5 @@
 ---
 - name: make working dir
   file:
-    path: /root/openshift-ansible-kvm
+    path: "{{ files.kvm }}"
     state: directory

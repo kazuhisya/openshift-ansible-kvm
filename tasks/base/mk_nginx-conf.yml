@@ -2,4 +2,4 @@
 - name: make nginx/nginx.conf
   template:
     src:  templates/nginx/nginx_conf.j2
-    dest: "files/{{ openshift.version }}/conf/nginx.conf"
+    dest: "{{ files.base }}/conf/nginx.conf"

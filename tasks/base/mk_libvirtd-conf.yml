@@ -2,4 +2,4 @@
 - name: make libvirtd/nat-openshift.conf
   template:
     src:  templates/libvirtd/nat-openshift.j2
-    dest: "files/{{ openshift.version }}/conf/libvirtd.nat-openshift.xml"
+    dest: "{{ files.base }}/conf/libvirtd.nat-openshift.xml"

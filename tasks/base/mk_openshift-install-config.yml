@@ -2,4 +2,4 @@
 - name: make bare-metal/install-config.yaml
   template:
     src:  templates/bare-metal/install-config-yaml.j2
-    dest: "files/{{ openshift.version }}/conf/install-config.yaml"
+    dest: "{{ files.base }}/conf/install-config.yaml"

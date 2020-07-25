@@ -1,7 +1,7 @@
 ---
 - name: send dnsmasq config to kvm host
   copy:
-    src:  "files/{{ openshift.version }}/conf/dnsmasq.openshift.conf"
+    src:  "{{ files.base }}/conf/dnsmasq.openshift.conf"
     dest: /etc/dnsmasq.d/openshift.conf
     selevel: s0
     serole: object_r
@@ -10,7 +10,7 @@
 
 - name: send dnsmasq hosts to kvm host
   copy:
-    src:  "files/{{ openshift.version }}/conf/dnsmasq.hosts.openshift"
+    src:  "{{ files.base }}/conf/dnsmasq.hosts.openshift"
     dest: /etc/hosts.openshift
     selevel: s0
     serole: object_r

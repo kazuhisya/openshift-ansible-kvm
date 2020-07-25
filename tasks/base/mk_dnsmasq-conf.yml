@@ -2,9 +2,9 @@
 - name: make dnsmasq/openshift.conf
   template:
     src:  templates/dnsmasq/dnsmasq_conf.j2
-    dest: "files/{{ openshift.version }}/conf/dnsmasq.openshift.conf"
+    dest: "{{ files.base }}/conf/dnsmasq.openshift.conf"
 
 - name: make dnsmasq/hosts.openshift
   template:
     src:  templates/dnsmasq/hosts_openshift.j2
-    dest: "files/{{ openshift.version }}/conf/dnsmasq.hosts.openshift"
+    dest: "{{ files.base }}/conf/dnsmasq.hosts.openshift"
