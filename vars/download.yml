@@ -64,6 +64,19 @@ url:
   coreos_bios_url:         "{{ static.coreos_base_url }}/{{ config.coreos_bios }}"
   openshift_installer_url: "{{ static.clients_base_url }}/{{ config.openshift_installer }}"
   openshift_client_url:    "{{ static.clients_base_url }}/{{ config.openshift_client }}"
-  sha256_dep_url:          "{{ static.coreos_base_url }}/sha256sum.txt"
+  sha256_kernel_url: >-
+    {%- if   openshift.dist == 'okd' -%} {{ openshift.okd_kenrel_sha256 }}
+    {%- elif openshift.dist == 'ocp' -%} {{ static.coreos_base_url }}/sha256sum.txt
+    {%- else -%}                         {{ static.coreos_base_url }}/sha256sum.txt
+    {%- endif -%}
+  sha256_initramfs_url: >-
+    {%- if   openshift.dist == 'okd' -%} {{ openshift.okd_initramfs_sha256 }}
+    {%- elif openshift.dist == 'ocp' -%} {{ static.coreos_base_url }}/sha256sum.txt
+    {%- else -%}                         {{ static.coreos_base_url }}/sha256sum.txt
+    {%- endif -%}
+  sha256_bios_url: >-
+    {%- if   openshift.dist == 'okd' -%} {{ openshift.okd_raw_sha256 }}
+    {%- elif openshift.dist == 'ocp' -%} {{ static.coreos_base_url }}/sha256sum.txt
+    {%- else -%}                         {{ static.coreos_base_url }}/sha256sum.txt
+    {%- endif -%}
   sha256_client_url:       "{{ static.clients_base_url }}/sha256sum.txt"
-

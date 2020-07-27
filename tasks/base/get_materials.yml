@@ -5,7 +5,7 @@
   get_url:
     url: "{{ url.coreos_kernel_url }}"
     dest: "{{ files.base }}/dependencies/{{ config.coreos_kernel }}"
-    #checksum: "sha256:{{ url.sha256_dep_url }}"
+    checksum: "sha256:{{ url.sha256_kernel_url }}"
   register: downloaded_kernel
   until: downloaded_kernel is succeeded
   retries: 3
@@ -14,7 +14,7 @@
   get_url:
     url: "{{ url.coreos_initramfs_url }}"
     dest: "{{ files.base }}/dependencies/{{ config.coreos_initramfs }}"
-    #checksum: "sha256:{{ url.sha256_dep_url }}"
+    checksum: "sha256:{{ url.sha256_initramfs_url }}"
   register: downloaded_initramfs
   until: downloaded_initramfs is succeeded
   retries: 3
@@ -23,7 +23,7 @@
   get_url:
     url: "{{ url.coreos_bios_url }}"
     dest: "{{ files.base }}/dependencies/{{ config.coreos_bios }}"
-    #checksum: "sha256:{{ url.sha256_dep_url }}"
+    checksum: "sha256:{{ url.sha256_bios_url }}"
   register: downloaded_bios
   until: downloaded_bios is succeeded
   retries: 3
@@ -32,7 +32,6 @@
   get_url:
     url: "{{ url.coreos_bios_url }}.sig"
     dest: "{{ files.base }}/dependencies/{{ config.coreos_bios }}.sig"
-    #checksum: "sha256:{{ url.sha256_dep_url }}"
   register: downloaded_bios_sig
   until: downloaded_bios_sig is succeeded
   retries: 3

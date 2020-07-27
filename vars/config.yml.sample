@@ -26,13 +26,27 @@ kvm_host:
 #  install_version: 4.5.2
 #  coreos_version:  4.5.2
 # --- OKD 4 ---------------
-#  install_version: 4.5.0-0.okd-2020-07-14-153706-ga
-#  coreos_version:  32.20200629.3.0
+#  * The ush of OCP4, oc client and openshift-install is automatically detected
+#  * by sha256sum.txt. but FOCS does not provide sha256sum.txt, so you have to
+#  * check and input it yourself from the website.
+#  * https://getfedora.org/en/coreos/download?tab=metal_virtualized&stream=stable
+#  install_version:      4.5.0-0.okd-2020-07-14-153706-ga
+#  coreos_version:       32.20200629.3.0
+#  okd_kenrel_sha256:    e58b29e5394b4167f0573c89c23b3b9bfe577c527ef160898cd6e0882a3ed8e8
+#  okd_initramfs_sha256: 8384393ba7a53a301db9a6c3e2a7c0ca38fb23a2af428517af1e9deccc7d921e
+#  okd_raw_sha256:       5718209c6c5ba019847184f5fad5964ac972524e9ffe8b00f653ad3e9c702de9
 # -------------------------
 openshift:
   dist: ocp
   install_version: 4.5.2
   coreos_version:  4.5.2
+
+#  dist: okd
+#  install_version:      4.5.0-0.okd-2020-07-14-153706-ga
+#  coreos_version:       32.20200629.3.0
+#  okd_kenrel_sha256:    e58b29e5394b4167f0573c89c23b3b9bfe577c527ef160898cd6e0882a3ed8e8
+#  okd_initramfs_sha256: 8384393ba7a53a301db9a6c3e2a7c0ca38fb23a2af428517af1e9deccc7d921e
+#  okd_raw_sha256:       5718209c6c5ba019847184f5fad5964ac972524e9ffe8b00f653ad3e9c702de9
 
 # pullsecret: '{"auths":{"cloud.openshift.com"......}}'
 # sshkey: 'ssh-rsa AAAABBB.....'
