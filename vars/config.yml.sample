@@ -26,7 +26,7 @@ kvm_host:
 #  install_version: 4.5.2
 #  coreos_version:  4.5.2
 # --- OKD 4 ---------------
-#  * The ush of OCP4, oc client and openshift-install is automatically detected
+#  * The sha256sum of OCP4, oc client and openshift-install is automatically detected
 #  * by sha256sum.txt. but FOCS does not provide sha256sum.txt, so you have to
 #  * check and input it yourself from the website.
 #  * https://getfedora.org/en/coreos/download?tab=metal_virtualized&stream=stable
