@@ -1,4 +1,5 @@
 ---
+# OpenShift Network
 net:
   domain: lab.local
   subdomain: test
@@ -6,10 +7,20 @@ net:
   cluster_prefx: 23
   service: 172.30.0.0/16
 
+# libviert NAT
+libvirt_nat:
+  router: 172.16.0.1
+  netmask: 255.255.255.0
+  dhcp_start: 172.16.0.2
+  dhcp_end: 172.16.0.254
+
+# Guet Settings
+#  Bootstrap VM
 bootstrap:
   - name: bootstrap
     ip: 172.16.0.100
     mac: "01"
+#  Master VMs
 master:
   - name: master-0
     ip: 172.16.0.101
@@ -23,6 +34,7 @@ master:
     ip: 172.16.0.103
     mac: "04"
     etcd_id: 2
+#  Worker VMs
 worker:
   - name: worker-0
     ip: 172.16.0.104
@@ -31,19 +43,25 @@ worker:
     ip: 172.16.0.105
     mac: "06"
 
+# Guest specs
+#  Bootstrap VM
 spec_bootstrap:
   cpu: 4
   ram: 16384
   disk: 128
+
+#  Master VMs
 spec_master:
   num_master: 3
   cpu: 4
   ram: 16384
   disk: 128
+
+#  Worker VMs
+#  num_worker: You must set the value of the replicas parameter to 0.
+#   see also: 1.1.7.1. Sample install-config.yaml file for bare metal
+#   https://access.redhat.com/documentation/en-us/openshift_container_platform/4.5/html/installing_on_bare_metal/installing-on-bare-metal#installation-initializing-manual_installing-bare-metal
 spec_worker:
-  # "You must set the value of the replicas parameter to 0."
-  # 1.1.7.1. Sample install-config.yaml file for bare metal
-  # https://access.redhat.com/documentation/en-us/openshift_container_platform/4.5/html/installing_on_bare_metal/installing-on-bare-metal#installation-initializing-manual_installing-bare-metal
   num_worker: 0
   cpu: 2
   ram: 8192

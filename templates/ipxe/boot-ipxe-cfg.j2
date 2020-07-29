@@ -6,7 +6,7 @@
 cpuid --ext 29 && set arch x64 || set arch x86
 cpuid --ext 29 && set archl amd64 || set archl i386
 
-kernel  http://172.16.0.1:8000/ipxe/{{ config.coreos_kernel }} ip=dhcp rd.neednet=1 initrd=http://172.16.0.1:8000/ipxe/{{ config.coreos_initramfs }} console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://172.16.0.1:8000/ipxe/{{ config.coreos_bios }} coreos.inst.ignition_url=http://172.16.0.1:8000/openshift/coreos/ignitions/{{ item }}.ign
-initrd http://172.16.0.1:8000/ipxe/{{ config.coreos_initramfs }}
+kernel  http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_kernel }} ip=dhcp rd.neednet=1 initrd=http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_initramfs }} console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_bios }} coreos.inst.ignition_url=http://{{ libvirt_nat.router }}:8000/openshift/coreos/ignitions/{{ item }}.ign
+initrd http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_initramfs }}
 boot
 EOF
