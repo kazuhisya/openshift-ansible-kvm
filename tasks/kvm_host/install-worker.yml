@@ -37,7 +37,7 @@
     --network network=openshift,mac="52:54:00:00:01:{{item.mac}}"
     --vcpus {{spec_worker.cpu}}
     --ram {{spec_worker.ram}}
-    --disk pool=default,size={{spec_worker.disk}},format=qcow2
+    --disk pool=default,size={{spec_worker.disk}},format=qcow2,cache={{ spec_worker.disk_cache }}
     --check disk_size=off
     --nographics
     --noautoconsole

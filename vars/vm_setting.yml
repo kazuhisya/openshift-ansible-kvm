@@ -44,11 +44,16 @@ worker:
     mac: "06"
 
 # Guest specs
+#  disk_cache: This attribute controls the cache mechanism.
+#  default, none, writethrough, writeback, directsync and unsafe.
+#  The "unsafe" option may be useful when you don't have a fast disk.
+
 #  Bootstrap VM
 spec_bootstrap:
   cpu: 4
   ram: 16384
   disk: 128
+  disk_cache: default
 
 #  Master VMs
 spec_master:
@@ -56,6 +61,7 @@ spec_master:
   cpu: 4
   ram: 16384
   disk: 128
+  disk_cache: default
 
 #  Worker VMs
 #  num_worker: You must set the value of the replicas parameter to 0.
@@ -66,4 +72,5 @@ spec_worker:
   cpu: 2
   ram: 8192
   disk: 128
+  disk_cache: default
 
