@@ -1,12 +1,5 @@
 ---
 - name: check csr status
-  command: /root/bin/oc get csr
-  environment:
-    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
-  register: result
-  ignore_errors: yes
-
-- name: load target
   shell: >-
     /root/bin/oc get csr | grep Pending |awk '{ print $1 }'
   environment:
