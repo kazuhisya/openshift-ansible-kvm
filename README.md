@@ -6,10 +6,10 @@ It supports both [OpenShift Container Platform 4(OCP4)](https://www.openshift.co
 
 ## Requirements
 
-- Workstation, The machine that runs Ansible. It is typically your laptop.
-    - Ansible >= 2.8
-    - You can simply run ansible on the KVM host if you want. Without the workstation.
+- Workstation (or call it base node, control node...), The machine that runs Ansible. It is typically your laptop.
     - Tested on Fedora and RHEL8.
+    - Ansible >= 2.8
+    - This node **is not** mandatory. You can run the script on a single KVM host if you want.
 - KVM host
     - RHEL 8.2
     - CPU with at least 4 cores
@@ -41,13 +41,20 @@ $ sudo dnf install -y ansible
 Create your settings based on the samples.
 At least change the following settings are **required** .
 
-- vars/config.yml
-    - `kvm_host.ip` : Your KVM host IP
-    - `kvm_host.if` : Your KVM host IF name (e.g. `enp2s0f0` )
-    - `pullsecret`  : Get form [cloud.redhat.com](https://cloud.redhat.com/openshift/install/metal/user-provisioned)
-    - `sshkey`      : Your ssh pub key
-- inventory/hosts
-    - `kvm_host`    : Your KVM host IP (or localhost)
+- `vars/config.yml`
+    - `kvm_host:`
+        - `ip:` Your KVM host IP
+        - `if:` Your KVM host IF name (e.g. `enp2s0f0` )
+    - `openshift:`
+        - `dist:` Select the distribution to deploy `ocp` or `okd`
+        - `install_version:` openshift-install and openshift-client version
+        - `coreos_version:` CoreOS version
+        - `okd_*_sha256:` (okd only) FOCS does not provide sha256sum.txt, so you have to check and input it yourself from [the official website](https://getfedora.org/en/coreos/download?tab=metal_virtualized&stream=stable).
+    - `key:`
+        - `pullsecret`  : Get form [cloud.redhat.com](https://cloud.redhat.com/openshift/install/metal/user-provisioned)
+        - `sshkey`      : Your ssh pub key
+- `inventory/hosts`
+    - `[kvm_host]`    : Your KVM host IP (or localhost)
 
 ```bash
 $ cp vars/config.yml.sample vars/config.yml
