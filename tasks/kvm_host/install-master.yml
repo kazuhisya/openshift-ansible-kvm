@@ -68,3 +68,12 @@
     delay: 10
     state: drained
   with_items: "{{ master }}"
+
+- name: waiting for sshd of master
+  shell: |
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null core@{{item.name}} exit
+  register: result
+  until: result.rc == 0
+  retries: 100
+  delay: 10
+  with_items: "{{ master }}"

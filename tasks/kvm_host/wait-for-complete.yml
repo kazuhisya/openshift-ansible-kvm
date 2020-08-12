@@ -25,6 +25,33 @@
   retries: 1200
   delay: 30
 
+- name: oc whoami
+  command: /root/bin/oc whoami
+  environment:
+    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
+  retries: 100
+  delay: 10
+  register: result
+  until: result is not failed
+
+- name: oc get nodes
+  command: /root/bin/oc get nodes
+  environment:
+    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
+  retries: 100
+  delay: 10
+  register: result
+  until: result is not failed
+
+- name: oc get csr
+  command: /root/bin/oc get csr
+  environment:
+    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
+  retries: 100
+  delay: 10
+  register: result
+  until: result is not failed
+
 - name: oc path to configs.imageregistry.operator.openshift.io/cluster
   command: /root/bin/oc patch configs.imageregistry.operator.openshift.io/cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
   environment:

@@ -62,3 +62,11 @@
     port: 22
     delay: 10
     state: drained
+
+- name: waiting for sshd of bootstrap
+  shell: |
+    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null core@{{bootstrap.0.name}} exit
+  register: result
+  until: result.rc == 0
+  retries: 100
+  delay: 10
