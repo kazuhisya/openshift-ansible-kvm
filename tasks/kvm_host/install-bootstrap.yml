@@ -56,17 +56,12 @@
     name: "{{ bootstrap.0.name }}"
     state: running
 
-- name: waiting for startup of bootstrap
+- name: waiting for sshd of bootstrap
   wait_for:
     host: "{{ bootstrap.0.ip }}"
     port: 22
     delay: 10
-    state: drained
+    search_regex: OpenSSH
+    state: started
+    timeout: 1200
 
-- name: waiting for sshd of bootstrap
-  shell: |
-    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null core@{{bootstrap.0.name}} exit
-  register: result
-  until: result.rc == 0
-  retries: 100
-  delay: 10
