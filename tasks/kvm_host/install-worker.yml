@@ -61,10 +61,13 @@
   with_items: "{{ worker }}"
   delay: 3
 
-- name: waiting for startup of worker
-  wait_for:
-    host: "{{ item.ip }}"
-    port: 22
-    delay: 10
-    state: drained
-  with_items: "{{ worker }}"
+# we don't wait for start up of worker(s)
+#- name: waiting for sshd of worker
+#  wait_for:
+#    host: "{{ item.ip }}"
+#    port: 22
+#    delay: 10
+#    search_regex: OpenSSH
+#    state: started
+#  with_items: "{{ worker }}"
+
