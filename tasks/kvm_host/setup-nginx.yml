@@ -54,7 +54,7 @@
     seuser: system_u
   when: openshift.dist == "okd"
 
-- name: send coreos to kvm host
+- name: send boot.ipxe to kvm host
   copy:
     src:  "{{ files.base }}/conf/{{ item }}"
     dest: /usr/share/nginx/html/ipxe/
