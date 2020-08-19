@@ -4,6 +4,8 @@ This repository contains Ansible playbooks for UPI installation of OpenShift 4 o
 
 It supports both [OpenShift Container Platform 4(OCP4)](https://www.openshift.com/) and [OKD 4](https://www.okd.io/) deployments.
 
+Note: This configuration is for disposable test and does not support production use.
+
 ## Requirements
 
 - Workstation (or call it base node, control node...), The machine that runs Ansible. It is typically your laptop.
