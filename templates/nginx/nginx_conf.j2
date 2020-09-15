@@ -28,7 +28,7 @@ log_format basic '$remote_addr [$time_local] '
             listen          6443;
             proxy_pass      apib;
             proxy_next_upstream on;
-            proxy_timeout   1s;
+            proxy_timeout   30s;
             proxy_responses 1;
             error_log /var/log/nginx/stream_apib.log warn;
     }
@@ -61,7 +61,7 @@ log_format basic '$remote_addr [$time_local] '
             listen          80;
             proxy_pass      ingressnosslb;
             proxy_next_upstream on;
-            proxy_timeout   1s;
+            proxy_timeout   30s;
             proxy_responses 1;
             error_log /var/log/nginx/stream_ingressnosslb.log warn;
     }
@@ -80,7 +80,7 @@ log_format basic '$remote_addr [$time_local] '
             listen          443;
             proxy_pass      ingresssslb;
             proxy_next_upstream on;
-            proxy_timeout   1s;
+            proxy_timeout   30s;
             proxy_responses 1;
             error_log /var/log/nginx/stream_ingresssslb.log warn;
     }
