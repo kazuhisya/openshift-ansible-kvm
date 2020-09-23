@@ -1,0 +1,24 @@
+diff -aurN /usr/lib/python3.8/site-packages/ansible/modules/net_tools/basics/get_url.py ./library/get_url.py
+# from: https://github.com/ansible/ansible/commit/159544610e5a925d589198febaa5198778ea51c0
+--- /usr/lib/python3.8/site-packages/ansible/modules/net_tools/basics/get_url.py	2020-09-01 14:48:25.000000000 +0900
++++ ./library/get_url.py	2020-09-23 11:39:04.078263867 +0900
+@@ -502,16 +502,16 @@
+             with open(checksum_tmpsrc) as f:
+                 lines = [line.rstrip('\n') for line in f]
+             os.remove(checksum_tmpsrc)
+-            checksum_map = {}
++            checksum_map = []
+             for line in lines:
+                 parts = line.split(None, 1)
+                 if len(parts) == 2:
+-                    checksum_map[parts[0]] = parts[1]
++                    checksum_map.append((parts[0], parts[1]))
+             filename = url_filename(url)
+ 
+             # Look through each line in the checksum file for a hash corresponding to
+             # the filename in the url, returning the first hash that is found.
+-            for cksum in (s for (s, f) in checksum_map.items() if f.strip('./') == filename):
++            for cksum in (s for (s, f) in checksum_map if f.strip('./') == filename):
+                 checksum = cksum
+                 break
+             else:
