@@ -44,6 +44,20 @@
     - "{{ config.coreos_initramfs }}"
     - "{{ config.coreos_bios }}"
 
+- name: send coreos to kvm host for rootfs
+  copy:
+    src:  "{{ files.base }}/dependencies/{{ item }}"
+    dest: /usr/share/nginx/html/ipxe/
+    selevel: s0
+    serole: object_r
+    setype: httpd_sys_content_t
+    seuser: system_u
+    mode: 0644
+  with_items:
+    - "{{ config.coreos_rootfs }}"
+  when:
+    - openshift.use_rootfs == true
+
 - name: send coreos signature to kvm host
   copy:
     src:  "{{ files.base }}/dependencies/{{ config.coreos_bios }}.sig"

@@ -15,34 +15,45 @@ files:
 # kernel
 #  for 4.2:     rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
 #  for 4.3-4.5: rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+#  for 4.6:     rhcos-{{ openshift.coreos_version }}-x86_64-live-kernel-x86_64
 #  for okd:     fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
 # initramfs
 #  for 4.2:     rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
 #  for 4.3-4.5: rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+#  for 4.6:     rhcos-{{ openshift.coreos_version }}-x86_64-live-initramfs.x86_64.img
 #  for okd:     fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
 # bios
 #  for 4.2:     rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
 #  for 4.4-4.5: rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
+#  for 4.6:     rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
 #  for okd:     fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
 config:
   coreos_kernel: >-
     {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
     {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
     {%- elif openshift.coreos_version | regex_search("^4\.+([3-5])\.") -%} rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.6\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-live-kernel-x86_64
     {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
     {%- endif -%}
   coreos_initramfs: >-
     {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
     {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
     {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%} rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+    {%- elif openshift.coreos_version | regex_search("^4\.6\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-live-initramfs.x86_64.img
     {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
     {%- endif -%}
   coreos_bios: >-
     {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
     {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
     {%- elif openshift.coreos_version | regex_search("^4\.+([3-5])\.") -%} rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
+    {%- elif openshift.coreos_version | regex_search("^4\.6\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
     {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
     {%- endif -%}
+  coreos_rootfs: >-
+    {%- if openshift.coreos_version | regex_search("^4\.6\.") -%}          rhcos-{{ openshift.coreos_version }}-x86_64-live-rootfs.x86_64.img
+    {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-live-rootfs.x86_64.img
+    {%- endif -%}
+
   openshift_installer: "openshift-install-linux-{{ openshift.install_version }}.tar.gz"
   openshift_client:    "openshift-client-linux-{{ openshift.install_version }}.tar.gz"
 
@@ -62,6 +73,7 @@ url:
   coreos_kernel_url:       "{{ static.coreos_base_url }}/{{ config.coreos_kernel  }}"
   coreos_initramfs_url:    "{{ static.coreos_base_url }}/{{ config.coreos_initramfs }}"
   coreos_bios_url:         "{{ static.coreos_base_url }}/{{ config.coreos_bios }}"
+  coreos_rootfs_url:       "{{ static.coreos_base_url }}/{{ config.coreos_rootfs }}"
   openshift_installer_url: "{{ static.clients_base_url }}/{{ config.openshift_installer }}"
   openshift_client_url:    "{{ static.clients_base_url }}/{{ config.openshift_client }}"
   sha256_kernel_url: >-
@@ -76,6 +88,11 @@ url:
     {%- endif -%}
   sha256_bios_url: >-
     {%- if   openshift.dist == 'okd' -%} {{ openshift.okd_raw_sha256 }}
+    {%- elif openshift.dist == 'ocp' -%} {{ static.coreos_base_url }}/sha256sum.txt
+    {%- else -%}                         {{ static.coreos_base_url }}/sha256sum.txt
+    {%- endif -%}
+  sha256_rootfs_url: >-
+    {%- if   openshift.dist == 'okd' -%} {{ openshift.okd_rootfs_sha256 }}
     {%- elif openshift.dist == 'ocp' -%} {{ static.coreos_base_url }}/sha256sum.txt
     {%- else -%}                         {{ static.coreos_base_url }}/sha256sum.txt
     {%- endif -%}

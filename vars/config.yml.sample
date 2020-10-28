@@ -36,10 +36,12 @@ kvm_host:
 #  okd_initramfs_sha256: 8384393ba7a53a301db9a6c3e2a7c0ca38fb23a2af428517af1e9deccc7d921e
 #  okd_raw_sha256:       5718209c6c5ba019847184f5fad5964ac972524e9ffe8b00f653ad3e9c702de9
 # -------------------------
+# use_rootfs:       RHCOS 4.6 + requires rootfs. (true|false)
 openshift:
   dist: ocp
   install_version: 4.5.2
   coreos_version:  4.5.2
+  use_rootfs:      false
 
 #  dist: okd
 #  install_version:      4.5.0-0.okd-2020-07-14-153706-ga
