@@ -37,6 +37,28 @@
   retries: 3
   when: openshift.dist == "okd"
 
+- name: download coreos rootfs
+  get_url:
+    url: "{{ url.coreos_rootfs_url }}"
+    dest: "{{ files.base }}/dependencies/{{ config.coreos_rootfs }}"
+    checksum: "sha256:{{ url.sha256_rootfs_url }}"
+  register: downloaded_rootfs
+  until: downloaded_rootfs is succeeded
+  retries: 3
+  when:
+    - openshift.use_rootfs == true
+
+- name: download coreos rootfs signature
+  get_url:
+    url: "{{ url.coreos_rootfs_url }}.sig"
+    dest: "{{ files.base }}/dependencies/{{ config.coreos_rootfs }}.sig"
+  register: downloaded_rootfs_sig
+  until: downloaded_rootfs_sig is succeeded
+  retries: 3
+  when:
+    - openshift.use_rootfs == true
+    - openshift.dist == "okd"
+
 - name: download openshift installer
   get_url:
     url: "{{ url.openshift_installer_url }}"

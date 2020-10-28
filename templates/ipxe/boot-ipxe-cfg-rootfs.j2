@@ -1,0 +1,12 @@
+#!ipxe
+
+# Variables are specified in boot.ipxe.cfg
+
+# Figure out if client is 64-bit capable
+cpuid --ext 29 && set arch x64 || set arch x86
+cpuid --ext 29 && set archl amd64 || set archl i386
+
+kernel  http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_kernel }} coreos.live.rootfs_url=http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_rootfs }} ip=dhcp rd.neednet=1 initrd=http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_initramfs }} console=tty0 console=ttyS0 coreos.inst=yes coreos.inst.install_dev=vda coreos.inst.image_url=http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_bios }} coreos.inst.insecure=true coreos.inst.ignition_url=http://{{ libvirt_nat.router }}:8000/openshift/coreos/ignitions/{{ item }}.ign
+initrd http://{{ libvirt_nat.router }}:8000/ipxe/{{ config.coreos_initramfs }}
+boot
+EOF

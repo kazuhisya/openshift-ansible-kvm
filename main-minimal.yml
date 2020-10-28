@@ -1,0 +1,35 @@
+---
+- hosts: base
+  vars_files:
+    - vars/config.yml
+    - vars/vm_setting.yml
+    - vars/download.yml
+
+  tasks:
+    - include_tasks: tasks/base/mk_files-dir.yml
+    - include_tasks: tasks/base/mk_dnsmasq-conf.yml
+    - include_tasks: tasks/base/mk_libvirtd-conf.yml
+    - include_tasks: tasks/base/mk_nginx-conf.yml
+    - include_tasks: tasks/base/mk_boot-ipxe-cfg.yml
+    - include_tasks: tasks/base/mk_openshift-install-config.yml
+    - include_tasks: tasks/base/get_materials.yml
+
+- hosts: kvm_host
+  vars_files:
+    - vars/config.yml
+    - vars/vm_setting.yml
+    - vars/download.yml
+
+  tasks:
+    - include_tasks: tasks/kvm_host/mk_files-dir.yml
+    - include_tasks: tasks/kvm_host/install-pkg.yml
+    - include_tasks: tasks/kvm_host/setup-selinux.yml
+    - include_tasks: tasks/kvm_host/setup-firewalld.yml
+    - include_tasks: tasks/kvm_host/setup-dnsmasq.yml
+    - include_tasks: tasks/kvm_host/setup-libvirtd.yml
+    - include_tasks: tasks/kvm_host/setup-nginx.yml
+    - include_tasks: tasks/kvm_host/setup-openshift-install-config.yml
+    - include_tasks: tasks/kvm_host/install-bootstrap.yml
+    - include_tasks: tasks/kvm_host/install-master.yml
+#    - include_tasks: tasks/kvm_host/install-worker.yml
+    - include_tasks: tasks/kvm_host/wait-for-complete.yml

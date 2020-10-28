@@ -7,3 +7,15 @@
     - bootstrap
     - master
     - worker
+
+- name: make ipxe/boot.ipxe.ROLE for rootfs
+  template:
+    src:  templates/ipxe/boot-ipxe-cfg-rootfs.j2
+    dest: "{{ files.base }}/conf/boot.ipxe.{{ item }}"
+  with_items:
+    - bootstrap
+    - master
+    - worker
+  when:
+    - openshift.use_rootfs == true
+
