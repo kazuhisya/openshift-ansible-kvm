@@ -1,8 +1,8 @@
 ---
-- name: start libvirt daemon
+- name: (re)start libvirt daemon
   service:
     name: libvirtd
-    state: started
+    state: restarted
 
 - name: check if openshift nat already exists
   virt_net:
