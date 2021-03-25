@@ -27,7 +27,7 @@ files:
 # bios
 #  for 4.2:        rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
 #  for 4.3-4.4.3:  rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
-#  for 4.4-4.7:    rhcos-metal.x86_64.raw.gz
+#  for 4.4.17-4.7: rhcos-metal.x86_64.raw.gz
 #  for okd:        fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
 config:
   coreos_kernel: >-
