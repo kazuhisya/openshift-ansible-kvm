@@ -3,9 +3,20 @@
 net:
   domain: lab.local
   subdomain: test
-  cluster_cidr: 10.128.0.0/14
-  cluster_prefx: 23
   service: 172.30.0.0/16
+  cluster_net_type: OpenShiftSDN
+cluster_net:
+  - cluster_cidr: 10.128.0.0/14
+    cluster_prefx: 23
+# Multiple subnets can be mentioned only for clusterNetwork.
+# "OpenShiftSDN" and "OVNKubernetes", support multiple ClusterNetworks.
+# https://access.redhat.com/solutions/6015571
+# e.g.
+# cluster_net:
+#  - cluster_cidr: 10.128.0.0/19
+#    cluster_prefx: 23
+#  - cluster_cidr: 10.128.32.0/19
+#    cluster_prefx: 23
 
 # libviert NAT
 libvirt_nat:
