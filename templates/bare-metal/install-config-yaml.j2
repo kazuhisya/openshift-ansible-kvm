@@ -11,10 +11,12 @@ controlPlane:
 metadata:
   name: {{ net.subdomain }}
 networking:
-  clusterNetworks:
-  - cidr: {{ net.cluster_cidr }}
-    hostPrefix: {{ net.cluster_prefx }}
-  networkType: OpenShiftSDN
+  clusterNetwork:
+{% for n in cluster_net %}
+  - cidr: {{ n.cluster_cidr }}
+    hostPrefix: {{ n.cluster_prefx }}
+{% endfor %}
+  networkType: {{ net.cluster_net_type }}
   serviceNetwork:
   - {{ net.service }}
 platform:
