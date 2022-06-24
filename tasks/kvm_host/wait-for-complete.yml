@@ -75,6 +75,14 @@
   retries: 1200
   delay: 30
 
+- name: remove bootstrap
+  shell: |
+    virsh destroy {{ item.name }}
+    virsh undefine --remove-all-storage {{ item.name }}
+  when:
+    - keep_bootstrap == false
+  with_items: "{{ bootstrap }}"
+
 - name: check kubeadmin-password
   slurp:
     src: "{{ files.kvm }}/bare-metal/auth/kubeadmin-password"
