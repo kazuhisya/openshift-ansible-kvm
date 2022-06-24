@@ -85,3 +85,7 @@ spec_worker:
   disk: 128
   disk_cache: unsafe
 
+# Remove the bootstrap node after the OCP installation is complete.
+# If this value is "true", the bootstrap node will be preserved.
+keep_bootstrap: false
+
