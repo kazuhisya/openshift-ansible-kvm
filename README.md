@@ -9,11 +9,11 @@ Note: This configuration is for disposable test and does not support production 
 ## Requirements
 
 - Workstation (or call it base node, control node...), The machine that runs Ansible. It is typically your laptop.
-    - Tested on Fedora and RHEL8.
-    - Ansible >= 2.8
+    - Tested on Fedora
+    - Ansible >= 2.11
     - This node **is not** mandatory. You can run the script on a single KVM host if you want.
 - KVM host
-    - RHEL 8.2
+    - RHEL >= 8.2
     - CPU with at least 4 cores
     - Memory with at least 80 GB
         - It will work with about 64 GB with memory overcommit, but we don't recommend it.
@@ -27,7 +27,7 @@ It can also be run with just the KVM host, without the workstation. (In that cas
 
 ## Quickstart
 
-### Install ansible on your Workstation
+### Install ansible(and/or ansible-core) on your Workstation
 
 ```bash
 $ sudo dnf install -y ansible
