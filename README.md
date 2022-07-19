@@ -91,6 +91,16 @@ Other ways, you can use [sshuttle](https://fedoramagazine.org/use-sshuttle-to-bu
 $ ansible-playbook ./03_cleanup.yml
 ```
 
+### Missing some Ansible modules
+
+If you use `ansible-core`, you may be missing some modules. In that case, please install the missing modules.
+
+```bash
+$ ansible-galaxy collection install ansible.posix
+$ ansible-galaxy collection install community.general
+$ ansible-galaxy collection install community.libvirt
+```
+
 ## Special Thanks
 
 This project started with inspiration from openshift-fast-install. ( [the original version](https://github.com/konono/openshift-fast-install) and [the forked version](https://github.com/masaki-furuta/openshift-fast-install) )
