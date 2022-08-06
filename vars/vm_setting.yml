@@ -4,7 +4,7 @@ net:
   domain: lab.local
   subdomain: test
   service: 172.30.0.0/16
-  cluster_net_type: OpenShiftSDN
+  cluster_net_type: Cilium
 cluster_net:
   - cluster_cidr: 10.128.0.0/14
     cluster_prefx: 23
@@ -70,7 +70,7 @@ spec_bootstrap:
 spec_master:
   num_master: 3
   cpu: 4
-  ram: 18432
+  ram: 24576
   disk: 128
   disk_cache: unsafe
 

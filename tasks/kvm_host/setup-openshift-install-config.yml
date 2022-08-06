@@ -37,6 +37,17 @@
     dest: /root/bin
     exclude: README.md
 
+- name: create manifests
+  command: "/root/bin/openshift-install create manifests --dir={{ files.kvm }}/bare-metal"
+
+- name: copy cilium items into the manifests directory
+  copy:
+    src: "{{ item }}"
+    dest: "{{ files.kvm }}/bare-metal/manifests/"
+  with_fileglob:
+    - "{{ files.base }}/cilium-olm/manifests/cilium.v1.12.0/*.yaml"
+
+
 - name: create ignition-configs
   command: "/root/bin/openshift-install create ignition-configs --dir={{ files.kvm }}/bare-metal"
 

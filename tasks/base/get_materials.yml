@@ -77,3 +77,16 @@
   until: downloaded_client is succeeded
   retries: 3
 
+
+# - name: git clone cilium
+#   git:
+#     repo: https://github.com/cilium/cilium-olm.git
+#     dest: "{{ files.base }}/dependencies/cilium-olm"
+#     depth: 1
+
+- name: git clone cilium
+  git:
+    repo: https://github.com/kazuhisya/cilium-olm.git
+    dest: "{{ files.base }}/cilium-olm"
+    depth: 1
+    version: fix-role-for-cilium-olm
