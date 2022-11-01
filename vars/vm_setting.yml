@@ -4,7 +4,8 @@ net:
   domain: lab.local
   subdomain: test
   service: 172.30.0.0/16
-  cluster_net_type: OpenShiftSDN
+  #cluster_net_type: OpenShiftSDN
+  cluster_net_type: OVNKubernetes
 cluster_net:
   - cluster_cidr: 10.128.0.0/14
     cluster_prefx: 23
