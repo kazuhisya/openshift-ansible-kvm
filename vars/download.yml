@@ -109,3 +109,20 @@ url:
     {%- else -%}                         {{ static.coreos_base_url }}/sha256sum.txt
     {%- endif -%}
   sha256_client_url:       "{{ static.clients_base_url }}/sha256sum.txt"
+
+
+# DNS hack for libvirt
+# Hack for internet connection issues with tricky DNS provided by libvirt+dnsmasq
+ext_dns:
+  - domain: "openshift.com"
+    addr: "8.8.8.8"
+  - domain: "quay.io"
+    addr: "8.8.8.8"
+  - domain: "redhat.com"
+    addr: "8.8.8.8"
+  - domain: "redhat.io"
+    addr: "8.8.8.8"
+  - domain: "amazonaws.com"
+    addr: "8.8.8.8"
+  - domain: "docker.io"
+    addr: "8.8.8.8"
