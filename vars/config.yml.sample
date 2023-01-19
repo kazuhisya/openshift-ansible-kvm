@@ -56,3 +56,6 @@ cleanup:
   conf: true
   bin:  false
 
+# DNS hack for libvirt
+# Hack for internet connection issues with tricky DNS provided by libvirt+dnsmasq
+use_ext_dns: false
