@@ -7,7 +7,14 @@
     </nat>
     <interface dev='{{ kvm_host.if }}'/>
   </forward>
-  <ip address='{{ libvirt_nat.router }}' netmask='{{ libvirt_nat.netmask }}'>
+{% if ext_dns==true %}
+  <dns>
+{% for dns in ext_dns %}
+    <forwarder domain='{{ dns.domain }}' addr="{{ dns.addr }}"/>
+{% endfor %}
+  </dns>
+{% endif %}
+<ip address='{{ libvirt_nat.router }}' netmask='{{ libvirt_nat.netmask }}'>
     <dhcp>
       <range start='{{libvirt_nat.dhcp_start }}' end='{{libvirt_nat.dhcp_end }}'/>
       <bootp file='http://{{ libvirt_nat.router }}:8000/ipxe/boot.ipxe'/>
