@@ -38,7 +38,7 @@
     --ram {{spec_bootstrap.ram}}
     --disk pool=default,size={{spec_bootstrap.disk}},format=qcow2,cache={{ spec_bootstrap.disk_cache }}
     --check disk_size=off
-    --nographics
+    --graphics spice,listen=0.0.0.0
     --noautoconsole
     --boot menu=on,useserial=on
 

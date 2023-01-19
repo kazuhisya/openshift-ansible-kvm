@@ -71,7 +71,8 @@ spec_bootstrap:
 spec_master:
   num_master: 3
   cpu: 4
-  ram: 18432
+  #ram: 18432
+  ram: 20480
   disk: 128
   disk_cache: unsafe
 
