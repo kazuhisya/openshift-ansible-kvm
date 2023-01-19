@@ -39,7 +39,7 @@
     --ram {{spec_master.ram}}
     --disk pool=default,size={{spec_master.disk}},format=qcow2,cache={{ spec_master.disk_cache }}
     --check disk_size=off
-    --nographics
+    --graphics spice,listen=0.0.0.0
     --noautoconsole
     --boot menu=on,useserial=on
   with_items: "{{ master }}"
