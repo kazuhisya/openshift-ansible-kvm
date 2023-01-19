@@ -7,7 +7,7 @@
     </nat>
     <interface dev='{{ kvm_host.if }}'/>
   </forward>
-{% if ext_dns==true %}
+{% if use_ext_dns==true %}
   <dns>
 {% for dns in ext_dns %}
     <forwarder domain='{{ dns.domain }}' addr="{{ dns.addr }}"/>
