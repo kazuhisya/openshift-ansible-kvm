@@ -6,7 +6,7 @@ kvm_host:
   if: <IF name>
 
 # OpenShift environment settings
-#  dist:            Select the distribution to deploy "ocp" or "okd"
+#  dist:            Select the distribution to deploy "ocp", "okd" or "pre-release"(pre-release of ocp).
 #  install_version: openshift-install and openshift-client version.
 #    ocp: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/
 #    okd: https://github.com/openshift/okd/releases
