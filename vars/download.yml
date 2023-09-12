@@ -71,9 +71,10 @@ config:
 
 static:
   coreos_base_url: >-
-    {%- if   openshift.dist == 'okd' -%} https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/{{ openshift.coreos_version }}/x86_64
-    {%- elif openshift.dist == 'ocp' -%} https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ version.minor }}/{{ openshift.coreos_version }}
-    {%- else -%}                         https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ version.minor }}/{{ openshift.coreos_version }}
+    {%- if   openshift.dist == 'okd' -%}         https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/{{ openshift.coreos_version }}/x86_64
+    {%- elif openshift.dist == 'pre-release' -%} https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/pre-release/{{ openshift.coreos_version }}
+    {%- elif openshift.dist == 'ocp' -%}         https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ version.minor }}/{{ openshift.coreos_version }}
+    {%- else -%}                                 https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ version.minor }}/{{ openshift.coreos_version }}
     {%- endif -%}
   clients_base_url: >-
     {%- if   openshift.dist == 'okd' -%} https://github.com/openshift/okd/releases/download/{{ openshift.install_version }}
