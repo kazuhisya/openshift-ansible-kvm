@@ -1,5 +1,6 @@
 ---
 - hosts: base
+  gather_facts: yes
   vars_files:
     - vars/config.yml
     - vars/vm_setting.yml
@@ -15,6 +16,7 @@
     - include_tasks: tasks/base/get_materials.yml
 
 - hosts: kvm_host
+  gather_facts: yes
   vars_files:
     - vars/config.yml
     - vars/vm_setting.yml

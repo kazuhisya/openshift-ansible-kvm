@@ -14,3 +14,10 @@
       - tar
       - unzip
     state: latest
+
+- name: install ngxinx-mod-stream for RHEL9.0+
+  dnf:
+    name:
+      - nginx-mod-stream
+    state: latest
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version | int >= 9
