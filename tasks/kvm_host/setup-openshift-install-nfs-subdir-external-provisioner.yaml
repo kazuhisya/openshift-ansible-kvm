@@ -1,0 +1,11 @@
+---
+- name: Install nfs-subdir-external-provisioner
+  shell: >-
+    {{ files.base }}/clients/helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+
+    {{ files.base }}/clients/{{ config.openshift_client }} create namespace nfs-subdir-external-provisioner  2>/dev/null
+
+    {{ files.base }}/clients/helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+    --set nfs.server=172.16.0.106 --set nfs.path=/export --set storageClass.reclaimPolicy=Retain -n nfs-subdir-external-provisioner
+  environment:
+    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"

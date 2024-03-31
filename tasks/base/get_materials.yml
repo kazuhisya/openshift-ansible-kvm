@@ -77,3 +77,23 @@
   until: downloaded_client is succeeded
   retries: 3
 
+- name: download helm client
+  get_url:
+    url: "{{ url.openshift_client_url }}"
+    dest: "{{ files.base }}/clients/helm"
+    checksum: "sha256:{{ url.sha256_client_url }}"
+  register: downloaded_helm_client
+  until: downloaded_helm_client is succeeded
+  retries: 3
+  tags: nfs
+
+- name: download rocky image
+  get_url:
+    url: "{{ url.rocky_url }}"
+    dest: "{{ files.rocky }}/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+    # checksum: "sha256:{{ url.sha256_rocky_url }}"
+    checksum: "sha256:d17f15a7649dd064795306c114b90fc5062e7d5fefa9e9f0bd6b7ce1aeac3ae5"
+  register: downloaded_rocky
+  until: downloaded_rocky is succeeded
+  retries: 3
+  tags: nfs

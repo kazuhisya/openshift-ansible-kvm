@@ -54,6 +54,12 @@ worker:
   - name: worker-1
     ip: 172.16.0.105
     mac: "06"
+#  Storage VMs
+storage:
+  - name: storage-0
+    ip: 172.16.0.106
+    mac: "07"
+
 
 # Guest specs
 #  disk_cache: This attribute controls the cache mechanism.
@@ -85,6 +91,13 @@ spec_worker:
   cpu: 2
   ram: 8192
   disk: 128
+  disk_cache: unsafe
+
+spec_storage:
+  num_storage: 0
+  cpu: 2
+  ram: 4096
+  disk: 50
   disk_cache: unsafe
 
 # Remove the bootstrap node after the OCP installation is complete.
