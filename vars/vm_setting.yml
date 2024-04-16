@@ -93,8 +93,11 @@ spec_worker:
   disk: 128
   disk_cache: unsafe
 
+# Actually deploy the storage node, download helm binary and install the plugin to use the NFS export as backend for PVs
+ff_provision_storage: true
+
+# Currently we allow only 1 or 0 storage node. To prevent provisiong storage set ff_provision_storage to false
 spec_storage:
-  num_storage: 0
   cpu: 2
   ram: 4096
   disk: 50 # Size of the disk that includes the NFS export
@@ -104,5 +107,3 @@ spec_storage:
 # If this value is "true", the bootstrap node will be preserved.
 keep_bootstrap: false
 
-# Actually deploy the storage node(s), download helm binary and install the plugin to use the NFS export as backend for PVs
-ff_provision_storage: true

@@ -2,7 +2,6 @@
   virt:
     command: list_vms
   register: all_vms
-  tags: nfs
 
 # want fix: move to using the virt module...
 - name: destroy old storage
@@ -11,7 +10,6 @@
     virsh undefine --remove-all-storage {{ item.name }}
   when: 'item.name  in all_vms.list_vms'
   with_items: "{{ storage }}"
-  tags: nfs
 
 - name: Set libvirt image base
   set_fact:
@@ -115,9 +113,8 @@
     --serial pty
     --cdrom /var/lib/libvirt/images/my-seed.iso
   with_items: "{{ storage }}"
-  tags: nfs
 
-- name: Wait for vm {{ item.name }} to get an IP
+- name: Wait for storage-0 VM to get an IP
   become: yes
   shell: >
     virsh domifaddr {{ item.name }} | awk '/ipv4/ {split($NF,a,"/"); print a[1]}'
@@ -126,9 +123,17 @@
   retries: 10
   delay: 5
   with_items: "{{ storage }}"
-  tags: nfs
 
 - name: Display NFS server login details
   debug:
     msg: "The NFS server is now ready!: You can log in into it with cloud@{{ IPinfo.results[0].stdout }}"
-  tags: nfs
+
+# Display again kubeadmin password, as the storage tasks likely have hid it already
+- name: check kubeadmin-password
+  slurp:
+    src: "{{ files.kvm }}/bare-metal/auth/kubeadmin-password"
+  register: kubeadmin_password
+
+- name: show kubeadmin-password
+  debug:
+    msg: "{{ kubeadmin_password.content | b64decode }}"

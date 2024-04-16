@@ -82,18 +82,18 @@
     - chk_file.stat.exists == true
     - cleanup.conf == true
 
-- name: check rocky files dir
+- name: Check for rocky files folder existence
   file:
     path: "{{ files.rocky }}"
   register: chk_rocky
 
-- name: remove rocky dir # TODO: fix me
+- name: Remove rocky files folder entirely
   file:
     path: "{{ files.rocky }}"
     state: absent
   when:
-    - chk_rocky.stat.exists == true
-    - cleanup.conf == true
+    - chk_rocky.state == "directory"
+    - cleanup.images == true
 
 - name: check old hosts.openshift for dnsmasq
   stat:
@@ -142,7 +142,7 @@
     - kubectl
     - oc
     - openshift-install
-    - helm # TODO: actually move helm to /root/bin inside get_materials.yaml
+    - helm
   when:
     - cleanup.bin == true
   ignore_errors: yes
