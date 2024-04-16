@@ -91,8 +91,6 @@ url:
   coreos_rootfs_url:       "{{ static.coreos_base_url }}/{{ config.coreos_rootfs }}"
   openshift_installer_url: "{{ static.clients_base_url }}/{{ config.openshift_installer }}"
   openshift_client_url:    "{{ static.clients_base_url }}/{{ config.openshift_client }}"
-  # Hardcoded for now
-  helm_client: "https://get.helm.sh/helm-v3.14.3-linux-386.tar.gz"
   sha256_kernel_url: >-
     {%- if   openshift.dist == 'okd' -%} {{ openshift.okd_kenrel_sha256 }}
     {%- elif openshift.dist == 'ocp' -%} {{ static.coreos_base_url }}/sha256sum.txt
@@ -116,7 +114,8 @@ url:
   sha256_client_url:       "{{ static.clients_base_url }}/sha256sum.txt"
 
   # Hardcoded for now
-  helm_cluent_sha: "https://get.helm.sh/helm-v3.14.3-linux-386.tar.gz.sha256sum"
+  helm_client: "https://get.helm.sh/helm-v3.14.3-linux-amd64.tar.gz" # TODO: figure out how to get the correct arch
+  sha256_helm_url: "https://get.helm.sh/helm-v3.14.3-linux-amd64.tar.gz.sha256sum" # TODO: figure out how to get the correct arch
   rocky_url: "https://download.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
   sha256_rocky_url: "https://download.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-LVM-8.9-20231119.0.x86_64.qcow2.CHECKSUM"
 

@@ -67,6 +67,11 @@
     - "'hypervisor' in group_names"
   with_list: "{{expanded_disks.results}}"
 
+- name: make working dir for nfs cloud-init
+  file:
+    path: "/tmp/reg"
+    state: directory
+
 - name: make meta-data and user-data file
   template:
     src:  "templates/{{ item }}.j2"

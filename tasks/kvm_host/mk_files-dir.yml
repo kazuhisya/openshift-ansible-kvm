@@ -4,12 +4,8 @@
     path: "{{ files.kvm }}"
     state: directory
   become: true
-  tags: fedora
 
-- name: make fedora files dir
+- name: make working dir for nfs cloud-init
   file:
-    path: "{{ files.fedora }}"
+    path: "/tmp/reg"
     state: directory
-  become: true
-  become_user: root
-  tags: fedora

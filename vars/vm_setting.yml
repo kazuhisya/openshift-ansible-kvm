@@ -97,10 +97,12 @@ spec_storage:
   num_storage: 0
   cpu: 2
   ram: 4096
-  disk: 50
+  disk: 50 # Size of the disk that includes the NFS export
   disk_cache: unsafe
 
 # Remove the bootstrap node after the OCP installation is complete.
 # If this value is "true", the bootstrap node will be preserved.
 keep_bootstrap: false
 
+# Actually deploy the storage node(s), download helm binary and install the plugin to use the NFS export as backend for PVs
+ff_provision_storage: true
