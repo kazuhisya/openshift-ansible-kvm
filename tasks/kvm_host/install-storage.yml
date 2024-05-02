@@ -1,0 +1,139 @@
+- name: check if storage already exists
+  virt:
+    command: list_vms
+  register: all_vms
+
+# want fix: move to using the virt module...
+- name: destroy old storage
+  shell: |
+    virsh destroy {{ item.name }}
+    virsh undefine --remove-all-storage {{ item.name }}
+  when: 'item.name  in all_vms.list_vms'
+  with_items: "{{ storage }}"
+
+- name: Set libvirt image base
+  set_fact:
+    guests_image_base_path: "/var/lib/libvirt/images"
+
+- name: Set params used in this playbooks (To be refactored into vars)
+  set_fact:
+    storage_disk_path: "{{guests_image_base_path}}/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+    vm_name: "storage-0"
+
+- name: create a copy of the qcow2 image
+  copy:
+    src: "{{ files.rocky }}/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+    dest: "{{ storage_disk_path }}"
+    remote_src: yes
+
+- name: Create VM root disk (_backed_ by the original Rocky os qcow2 image. This will save space when we have more VMs using the same base OS)
+  command: "qemu-img create -f qcow2 -F qcow2 -b {{ storage_disk_path }} {{guests_image_base_path}}/{{item.name}}.qcow2"
+  with_items: "{{ storage }}"
+  become: true
+
+# References: https://access.redhat.com/documentation/en-us/red_hat_update_infrastructure/3.1/html-single/system_administrators_guide/index#gather_required_information
+- name: Expand root disk to the correct size
+  command: "qemu-img resize {{guests_image_base_path}}/{{item.name}}.qcow2 +{{spec_storage.disk}}G"
+  with_items: "{{ storage }}"
+  become: true
+
+- name: Workaround to expand the disks, part I
+  command: "cp {{guests_image_base_path}}/{{item.name}}.qcow2 {{guests_image_base_path}}/{{item.name}}.qcow2.orig"
+  with_items: "{{ storage }}"
+  become: true 
+
+# virt-resize can NOT expand in-place
+# references: https://linux.die.net/man/1/virt-resize
+- name: Workaround to expand the disks, part II (this will take some time)
+  shell: "virt-resize --expand /dev/sda5 {{guests_image_base_path}}/{{item.name}}.qcow2.orig {{guests_image_base_path}}/{{item.name}}.qcow2"
+  with_items: "{{ storage }}"
+  become: true
+
+- name: Confirm disks were expanded correctly
+  shell: "virt-filesystems --long -h --all -a {{guests_image_base_path}}/{{item.name}}.qcow2 | grep partition | awk '{ gsub(\"G\",\"\",$6);gsub(\"M\",\"\",$6); print $6}'"
+  with_items: "{{ storage }}"
+  become: true
+  register: expanded_disks
+
+# NOTE: 8.9G  is the initial disk size of /sda5 in the latest Rocky Server qcow2 image, as per Apr 2024
+# references: https://download.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2
+- name: Fail if the disks were not expanded correctly
+  fail:
+    msg: "Disk for {{item.item.key}} ws not resized properly"
+  when:
+    - item.stdout == "8.9"
+    - "'hypervisor' in group_names"
+  with_list: "{{expanded_disks.results}}"
+
+- name: make working dir for nfs cloud-init
+  file:
+    path: "/tmp/reg"
+    state: directory
+
+- name: make meta-data and user-data file
+  template:
+    src:  "templates/{{ item }}.j2"
+    dest: "/tmp/reg/{{ item }}"
+  with_items:
+    - meta-data
+    - user-data
+
+- name: Create iso from user-data and meta-data
+  shell: "mkisofs -J -l -R -V cidata -iso-level 4 -o /var/lib/libvirt/images/my-seed.iso /tmp/reg/user-data /tmp/reg/meta-data"
+
+- name: relabel for selinux
+  file:
+    path: "/var/lib/libvirt/images/{{ item }}"
+    owner: qemu
+    group: qemu
+    mode: '0644'
+    serole: object_r
+    setype: virt_image_t
+    seuser: system_u
+  with_items:
+    - Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2
+    - my-seed.iso
+
+# want fix: move to using the virt module...
+- name: install storage node(s)
+  shell: >-
+    virt-install
+    --name {{item.name}}
+    --hvm
+    --virt-type kvm
+    --arch x86_64
+    --network network=openshift,mac="52:54:00:00:01:{{item.mac}}"
+    --vcpus {{spec_storage.cpu}}
+    --ram {{spec_storage.ram}}
+    --disk {{guests_image_base_path}}/{{item.name}}.qcow2,format=qcow2,cache=default
+    --os-variant detect=on
+    --import
+    --graphics none
+    --console pty,target_type=virtio
+    --serial pty
+    --cdrom /var/lib/libvirt/images/my-seed.iso
+  with_items: "{{ storage }}"
+
+- name: Wait for storage-0 VM to get an IP
+  become: yes
+  shell: >
+    virsh domifaddr {{ item.name }} | awk '/ipv4/ {split($NF,a,"/"); print a[1]}'
+  register: IPinfo
+  until: IPinfo.stdout != ""
+  retries: 10
+  delay: 5
+  with_items: "{{ storage }}"
+
+- name: Display NFS server login details
+  debug:
+    msg: "The NFS server is now ready!: You can log in into it with cloud@{{ IPinfo.results[0].stdout }}"
+
+# Display again kubeadmin password, as the storage tasks likely have hid it already
+- name: check kubeadmin-password
+  slurp:
+    src: "{{ files.kvm }}/bare-metal/auth/kubeadmin-password"
+  register: kubeadmin_password
+
+- name: show kubeadmin-password
+  debug:
+    msg: "{{ kubeadmin_password.content | b64decode }}"

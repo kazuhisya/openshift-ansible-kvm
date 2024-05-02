@@ -6,3 +6,6 @@
 {% for w in worker %}
 {{ w.ip }}            {{ w.name }} {{ w.name }}.{{ net.subdomain }}.{{ net.domain }}
 {% endfor %}
+{% for s in storage %}
+{{ s.ip }}            {{ s.name }} {{ s.name }}.{{ net.subdomain }}.{{ net.domain }}
+{% endfor %}

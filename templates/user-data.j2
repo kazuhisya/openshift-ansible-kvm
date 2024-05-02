@@ -1,0 +1,39 @@
+#cloud-config
+# Set the default user
+system_info:
+  default_user:
+    name: cloud
+
+# Unlock the default user
+chpasswd:
+  list: |
+     root:root
+     cloud:root
+  expire: False
+
+# Other settings
+resize_rootfs: True
+ssh_pwauth: True
+
+# Add any ssh public keys
+ssh_authorized_keys:
+ - {{ key.sshkey }}
+
+write_files:
+  - path: /etc/exports
+    content: |
+      /export *(rw,sync,no_root_squash,no_subtree_check,fsid=0)
+    owner: 'root:root'
+    permissions: '0644'
+
+bootcmd:
+ - [ sh, -c, echo "=========bootcmd=========" ]
+
+
+runcmd:
+ - [ sh, -c, echo "=========runcmd=========" ]
+ - [ mkdir, -p, /export]
+ - [ setsebool, -P, nfs_export_all_rw, on]
+ - [ systemctl, enable, --now, nfs-server]
+ - [ systemctl, enable, --now, rpcbind]
+
