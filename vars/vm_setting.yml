@@ -103,6 +103,14 @@ spec_storage:
   disk: 50 # Size of the disk that includes the NFS export
   disk_cache: unsafe
 
+# Deploy minimal non distributed, non HA minio instance
+# See https://github.com/kubernetes/examples/blob/master/staging/storage/minio/README.md
+ff_deploy_minio: true
+
+# To deploy loki ff_provision_storage, ff_deploy_minio and ff_deploy_loki must ALL be set to true
+ff_deploy_loki: false
+
+
 # Remove the bootstrap node after the OCP installation is complete.
 # If this value is "true", the bootstrap node will be preserved.
 keep_bootstrap: false

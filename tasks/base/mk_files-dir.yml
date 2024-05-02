@@ -8,7 +8,6 @@
   file:
     path: "{{ files.rocky }}"
     state: directory
-  tags: nfs
 
 - name: make files/clients dir
   file:

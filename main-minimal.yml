@@ -43,9 +43,28 @@
     - vars/vm_setting.yml
     - vars/download.yml
 
+ # Deploy NFS storage and use nfs-subdir-external-provisioner as backend for PVC
   tasks:
     - include_tasks: tasks/kvm_host/install-storage.yml
+      when: 
+        - ff_provision_storage is defined
+        - ff_provision_storage == true
     - include_tasks: tasks/kvm_host/setup-openshift-install-nfs-subdir-external-provisioner.yaml
       when: 
         - ff_provision_storage is defined
         - ff_provision_storage == true
+
+ # Install Minio
+- hosts: kvm_host
+  gather_facts: yes
+  vars_files:
+    - vars/config.yml
+    - vars/vm_setting.yml
+    - vars/download.yml
+  tasks:
+    - include_tasks: tasks/kvm_host/setup-minio.yaml
+      when: 
+        - ff_provision_storage is defined
+        - ff_provision_storage == true
+        - ff_deploy_minio is defined
+        - ff_deploy_minio == true

@@ -85,6 +85,7 @@
   register: downloaded_helm_client
   until: downloaded_helm_client is succeeded
   retries: 3
+
 - name: send helm client
   unarchive:
     src: "{{ files.base }}/clients/helm.tar.gz"
