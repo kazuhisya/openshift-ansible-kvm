@@ -54,6 +54,12 @@ worker:
   - name: worker-1
     ip: 172.16.0.105
     mac: "06"
+#  Storage VMs
+storage:
+  - name: storage-0
+    ip: 172.16.0.106
+    mac: "07"
+
 
 # Guest specs
 #  disk_cache: This attribute controls the cache mechanism.
@@ -86,6 +92,24 @@ spec_worker:
   ram: 8192
   disk: 128
   disk_cache: unsafe
+
+# Actually deploy the storage node, download helm binary and install the plugin to use the NFS export as backend for PVs
+ff_provision_storage: true
+
+# Currently we allow only 1 or 0 storage node. To prevent provisiong storage set ff_provision_storage to false
+spec_storage:
+  cpu: 2
+  ram: 4096
+  disk: 50 # Size of the disk that includes the NFS export
+  disk_cache: unsafe
+
+# Deploy minimal non distributed, non HA minio instance
+# See https://github.com/kubernetes/examples/blob/master/staging/storage/minio/README.md
+ff_deploy_minio: true
+
+# To deploy loki ff_provision_storage, ff_deploy_minio and ff_deploy_loki must ALL be set to true
+ff_deploy_loki: false
+
 
 # Remove the bootstrap node after the OCP installation is complete.
 # If this value is "true", the bootstrap node will be preserved.

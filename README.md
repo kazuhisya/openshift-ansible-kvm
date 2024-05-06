@@ -63,6 +63,67 @@ $ cp vars/config.yml.sample vars/config.yml
 $ cp inventory/hosts.sample inventory/hosts
 ```
 
+### How to use the Persistent Volume Claims
+
+Make sure to have set the provide storage feature flag before running the playbook.
+
+- `vars/vm_settings.yml`
+    - `ff_provision_storage`: `true`
+
+Confirm that `nfs-subdir-external-provisioner` plugin is working correctly
+
+```bash
+ $ oc get storageclass
+NAME         PROVISIONER                                     RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+nfs-client   cluster.local/nfs-subdir-external-provisioner   Retain          Immediate           true                   26m <=== the ngf-client class must be there
+
+ $ oc get all -n nfs-subdir-external-provisioner
+NAME                                                  READY   STATUS    RESTARTS   AGE
+pod/nfs-subdir-external-provisioner-8b5cd6b78-nw4zf   1/1     Running   0          14s <==== This pod must be running
+
+NAME                                              READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nfs-subdir-external-provisioner   1/1     1            1           19s
+
+NAME                                                        DESIRED   CURRENT   READY   AGE
+replicaset.apps/nfs-subdir-external-provisioner-8b5cd6b78   1         1         1       14s
+replicaset.apps/nfs-subdir-external-provisioner-f64f74cfc   0         0         0       19s
+
+
+```
+
+Deploy an application requiring a Persistent Volume, and confirm it works
+
+```bash
+ $ oc get storageclass
+NAME         PROVISIONER                                     RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+nfs-client   cluster.local/nfs-subdir-external-provisioner   Retain          Immediate           true                   26m
+
+ $ oc apply -f tests/persistent-busybox.yml [-n <your-namespace]
+
+ $ oc get pv -o wide [-n <your-namespace]
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                        STORAGECLASS   REASON   AGE   VOLUMEMODE
+pvc-6142a868-ed9d-455e-b9f2-12badeceb9bc   1Mi        RWX            Retain           Bound    nfs-subdir-external-provisioner/test-claim   nfs-client              13m   Filesystem
+
+ $ oc get pvc [-n <your-namespace]
+NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+test-claim   Bound    pvc-6142a868-ed9d-455e-b9f2-12badeceb9bc   1Mi        RWX            nfs-client     15m
+
+ $ oc get pod demo-busybox-789874f84c-fzbm6  [-n <your-namespace]
+NAME                            READY   STATUS    RESTARTS   AGE
+demo-busybox-789874f84c-fzbm6   1/1     Running   0          17m
+
+ $ oc get pod demo-busybox-789874f84c-fzbm6 [-n <your-namespace] -o yaml | grep volume -A3
+    volumeMounts:
+    - mountPath: /data/db
+      name: voldb1
+    [...]
+--
+  volumes:
+  - name: voldb1
+    persistentVolumeClaim:
+      claimName: test-claim
+```
+
 ### Run
 
 ```bash
@@ -100,6 +161,8 @@ $ ansible-galaxy collection install ansible.posix
 $ ansible-galaxy collection install community.general
 $ ansible-galaxy collection install community.libvirt
 ```
+
+### 
 
 ## Special Thanks
 

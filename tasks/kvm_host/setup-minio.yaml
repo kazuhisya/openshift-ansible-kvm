@@ -1,0 +1,20 @@
+---
+# References: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/31#issuecomment-756823499
+#             https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner#without-helm
+- name: Install minio
+  shell: >-
+    wget https://raw.githubusercontent.com/kubernetes/examples/master/staging/storage/minio/minio-standalone-pvc.yaml;
+    sed -i 's/standard/nfs-client/' minio-standalone-pvc.yaml;
+    /root/bin/oc create -f minio-standalone-pvc.yaml;
+    rm minio-standalone-pvc.yaml;
+
+    /root/bin/oc create -f https://raw.githubusercontent.com/kubernetes/examples/master/staging/storage/minio/minio-standalone-deployment.yaml;
+    /root/bin/oc create -f https://raw.githubusercontent.com/kubernetes/examples/master/staging/storage/minio/minio-standalone-service.yaml;
+
+    /root/bin/oc create sa minio;
+    /root/bin/oc adm policy add-scc-to-user hostnetwork-v2 -z minio;
+    /root/bin/oc set sa deployment/minio-deployment minio;
+    /root/bin/oc expose svc minio-service;
+  environment:
+    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
+

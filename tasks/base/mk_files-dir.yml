@@ -4,6 +4,11 @@
     path: "{{ files.base }}"
     state: directory
 
+- name: make rocky files dir
+  file:
+    path: "{{ files.rocky }}"
+    state: directory
+
 - name: make files/clients dir
   file:
     path: "{{ files.base }}/clients"

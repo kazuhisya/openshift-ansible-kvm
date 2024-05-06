@@ -39,7 +39,7 @@
     --ram {{spec_worker.ram}}
     --disk pool=default,size={{spec_worker.disk}},format=qcow2,cache={{ spec_worker.disk_cache }}
     --check disk_size=off
-    --graphics spice,listen=0.0.0.0
+    --graphics vnc,listen=0.0.0.0
     --noautoconsole
     --boot menu=on,useserial=on
   with_items: "{{ worker }}"

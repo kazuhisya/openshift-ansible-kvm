@@ -10,6 +10,8 @@ version:
 files:
   base: "files/{{ openshift.dist }}/{{ openshift.install_version }}"
   kvm:  "/root/openshift-ansible-kvm"
+  # Let's keep this hardcoded for now
+  rocky: "files/rocky/8.9"
 
 # Download URLs
 # kernel
@@ -110,6 +112,14 @@ url:
     {%- else -%}                         {{ static.coreos_base_url }}/sha256sum.txt
     {%- endif -%}
   sha256_client_url:       "{{ static.clients_base_url }}/sha256sum.txt"
+
+  # Hardcoded for now
+  helm_client: "https://get.helm.sh/helm-v3.14.3-linux-amd64.tar.gz" # TODO: figure out how to get the correct arch
+  sha256_helm_url: "https://get.helm.sh/helm-v3.14.3-linux-amd64.tar.gz.sha256sum" # TODO: figure out how to get the correct arch
+  #rocky_url: "https://download.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+  #sha256_rocky_url: "https://download.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-LVM-8.9-20231119.0.x86_64.qcow2.CHECKSUM"
+  rocky_url: "https://ftp.jaist.ac.jp/pub/Linux/rocky/8.9/images/x86_64/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+  sha256_rocky_url: "https://ftp.jaist.ac.jp/pub/Linux/rocky/8.9/images/x86_64//Rocky-8-GenericCloud-LVM-8.9-20231119.0.x86_64.qcow2.CHECKSUM"
 
 
 # DNS hack for libvirt

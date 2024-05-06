@@ -3,3 +3,10 @@
   file:
     path: "{{ files.kvm }}"
     state: directory
+  become: true
+
+- name: make working dir for nfs cloud-init
+  file:
+    path: "/tmp/reg"
+    state: directory
+
