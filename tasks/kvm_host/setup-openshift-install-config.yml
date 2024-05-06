@@ -37,6 +37,15 @@
     dest: /root/bin
     exclude: README.md
 
+- name: send helm clients
+  unarchive:
+    src: "{{ files.base }}/clients/helm.tar.gz"
+    dest: /root/bin
+    exclude:
+      - README.md
+      - LICENSE
+    extra_opts: ['--strip-components=1', '--show-stored-names']
+
 - name: create ignition-configs
   command: "/root/bin/openshift-install create ignition-configs --dir={{ files.kvm }}/bare-metal"
 

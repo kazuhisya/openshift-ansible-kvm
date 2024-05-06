@@ -24,7 +24,7 @@
   copy:
     src: "{{ files.rocky }}/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
     dest: "{{ storage_disk_path }}"
-    remote_src: yes
+#    remote_src: yes
 
 - name: Create VM root disk (_backed_ by the original Rocky os qcow2 image. This will save space when we have more VMs using the same base OS)
   command: "qemu-img create -f qcow2 -F qcow2 -b {{ storage_disk_path }} {{guests_image_base_path}}/{{item.name}}.qcow2"
@@ -120,8 +120,8 @@
     virsh domifaddr {{ item.name }} | awk '/ipv4/ {split($NF,a,"/"); print a[1]}'
   register: IPinfo
   until: IPinfo.stdout != ""
-  retries: 10
-  delay: 5
+  retries: 100
+  delay: 10
   with_items: "{{ storage }}"
 
 - name: Display NFS server login details

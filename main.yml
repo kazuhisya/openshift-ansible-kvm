@@ -67,3 +67,4 @@
         - ff_provision_storage == true
         - ff_deploy_minio is defined
         - ff_deploy_minio == true
+

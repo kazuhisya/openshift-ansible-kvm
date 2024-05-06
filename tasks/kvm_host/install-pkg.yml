@@ -6,7 +6,6 @@
       - libvirt
       - qemu-kvm
       - virt-install
-      - guestfs-tools
       - dnsmasq
       - nginx
       - python3-lxml
@@ -16,9 +15,17 @@
       - unzip
     state: latest
 
-- name: install ngxinx-mod-stream for RHEL9.0+
+- name: install guestfs-tools and ngxinx-mod-stream for RHEL9.0+
   dnf:
     name:
+      - guestfs-tools
       - nginx-mod-stream
     state: latest
   when: ansible_distribution == "RedHat" and ansible_distribution_major_version | int >= 9
+
+- name: install guestfs-tools(libguestfs-tools-c) for RHEL8.0+
+  dnf:
+    name:
+      - libguestfs-tools-c
+    state: latest
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version | int <= 9

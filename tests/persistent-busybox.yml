@@ -38,3 +38,4 @@ spec:
         volumeMounts:
         - name: voldb1
           mountPath: /data/db
+

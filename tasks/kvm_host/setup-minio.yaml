@@ -17,3 +17,4 @@
     /root/bin/oc expose svc minio-service;
   environment:
     KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
+

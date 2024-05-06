@@ -86,14 +86,14 @@
   until: downloaded_helm_client is succeeded
   retries: 3
 
-- name: send helm client
-  unarchive:
-    src: "{{ files.base }}/clients/helm.tar.gz"
-    dest: /root/bin
-    exclude:
-      - README.md
-      - LICENSE
-    extra_opts: ['--strip-components=1', '--show-stored-names']
+#- name: send helm client
+#  unarchive:
+#    src: "{{ files.base }}/clients/helm.tar.gz"
+#    dest: /root/bin
+#    exclude:
+#      - README.md
+#      - LICENSE
+#    extra_opts: ['--strip-components=1', '--show-stored-names']
 
 - name: download rocky image
   get_url:
