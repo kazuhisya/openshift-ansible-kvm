@@ -17,12 +17,12 @@
 
 - name: Set params used in this playbooks (To be refactored into vars)
   set_fact:
-    storage_disk_path: "{{guests_image_base_path}}/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+    storage_disk_path: "{{ guests_image_base_path }}/{{ url.rocky_qcow2 }}"
     vm_name: "storage-0"
 
 - name: create a copy of the qcow2 image
   copy:
-    src: "{{ files.rocky }}/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+    src: "{{ files.rocky }}/{{ url.rocky_qcow2 }}"
     dest: "{{ storage_disk_path }}"
 #    remote_src: yes
 
@@ -91,7 +91,7 @@
     setype: virt_image_t
     seuser: system_u
   with_items:
-    - Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2
+    - "{{ url.rocky_qcow2 }}"
     - my-seed.iso
 
 # want fix: move to using the virt module...

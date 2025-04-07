@@ -98,9 +98,9 @@
 - name: download rocky image
   get_url:
     url: "{{ url.rocky_url }}"
-    dest: "{{ files.rocky }}/Rocky-8-GenericCloud-Base-8.9-20231119.0.x86_64.qcow2"
+    dest: "{{ files.rocky }}/{{ url.rocky_qcow2 }}"
     # checksum: "sha256:{{ url.sha256_rocky_url }}"
-    checksum: "sha256:d17f15a7649dd064795306c114b90fc5062e7d5fefa9e9f0bd6b7ce1aeac3ae5"
+    #checksum: "sha256:e56066c58606191e96184de9a9183a3af33c59bcbd8740d8b10ca054a7a89c14"
   register: downloaded_rocky
   until: downloaded_rocky is succeeded
   retries: 3

@@ -82,18 +82,18 @@
     - chk_file.stat.exists == true
     - cleanup.conf == true
 
-- name: Check for rocky files folder existence
-  file:
-    path: "{{ files.rocky }}"
-  register: chk_rocky
+#- name: Check for rocky files folder existence
+#  file:
+#    path: "{{ files.rocky }}"
+#  register: chk_rocky
 
-- name: Remove rocky files folder entirely
-  file:
-    path: "{{ files.rocky }}"
-    state: absent
-  when:
-    - chk_rocky.state == "directory"
-    - cleanup.images == true
+#- name: Remove rocky files folder entirely
+#  file:
+#    path: "{{ files.rocky }}"
+#    state: absent
+#  when:
+#    - chk_rocky.state == "directory"
+#    - cleanup.images == true
 
 - name: check old hosts.openshift for dnsmasq
   stat:

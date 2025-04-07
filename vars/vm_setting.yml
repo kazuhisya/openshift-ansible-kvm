@@ -54,11 +54,14 @@ worker:
   - name: worker-1
     ip: 172.16.0.105
     mac: "06"
+  - name: worker-2
+    ip: 172.16.0.106
+    mac: "07"
 #  Storage VMs
 storage:
   - name: storage-0
-    ip: 172.16.0.106
-    mac: "07"
+    ip: 172.16.0.107
+    mac: "08"
 
 
 # Guest specs
