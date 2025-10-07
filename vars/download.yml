@@ -15,26 +15,28 @@ files:
 
 # Download URLs
 # kernel
-#  for 4.2:        rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
-#  for 4.3-4.4.3:  rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
-#  for 4.4-17-4.5: rhcos-x86_64-installer-kernel-x86_64
-#  for 4.6-4.10:    rhcos-x86_64-live-kernel-x86_64
-#  for okd:        fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
+#  for 4.2:         rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
+#  for 4.3-4.4.3:   rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+#  for 4.4.17-4.5:  rhcos-x86_64-installer-kernel-x86_64
+#  for 4.6-4.18:    rhcos-x86_64-live-kernel-x86_64
+#  for 4.19:        rhcos-x86_64-live-kernel.x86_64
+#  for okd:         fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
 # initramfs
-#  for 4.2:        rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
-#  for 4.3-4.4.3:  rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
-#  for 4.4-17-4.5: rhcos-installer-initramfs.x86_64.img
-#  for 4.6-4.10:    rhcos-live-initramfs.x86_64.img
-#  for okd:        fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
+#  for 4.2:         rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
+#  for 4.3-4.4.3:   rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+#  for 4.4.17-4.5:  rhcos-installer-initramfs.x86_64.img
+#  for 4.6-4.19:    rhcos-live-initramfs.x86_64.img
+#  for okd:         fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
 # bios
-#  for 4.2:        rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
-#  for 4.3-4.4.3:  rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
-#  for 4.4.17-4.10: rhcos-metal.x86_64.raw.gz
-#  for okd:        fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
+#  for 4.2:         rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
+#  for 4.3-4.4.3:   rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
+#  for 4.4.17-4.19: rhcos-metal.x86_64.raw.gz
+#  for okd:         fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
 config:
   coreos_kernel: >-
     {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.1([0-9])\.") -%} rhcos-live-kernel-x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.19\.") -%}       rhcos-live-kernel.x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.1([0-8])\.") -%} rhcos-live-kernel-x86_64
     {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
     {%- elif openshift.coreos_version | regex_search("^4\.3\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
     {%- elif openshift.coreos_version | regex_search("^4\.4\.3") -%}       rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
