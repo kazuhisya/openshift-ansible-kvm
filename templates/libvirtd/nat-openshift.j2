@@ -25,6 +25,9 @@
 {% for w in worker %}
       <host mac='52:54:00:00:01:{{ w.mac }}' ip='{{ w.ip }}' name='{{ w.name }}.{{ net.subdomain }}.{{ net.domain }}'/>.
 {% endfor %}
+{% for s in storage %}
+      <host mac='52:54:00:00:01:{{ s.mac }}' ip='{{ s.ip }}' name='{{ s.name }}.{{ net.subdomain }}.{{ net.domain }}'/>.
+{% endfor %}
     </dhcp>
   </ip>
 </network>

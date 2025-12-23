@@ -1,0 +1,17 @@
+---
+# References: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/31#issuecomment-756823499
+#             https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner#without-helm
+- name: Install nfs-subdir-external-provisioner
+  shell: >-
+    /root/bin/helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/ 2>/dev/null;
+
+    /root/bin/oc create namespace nfs-subdir-external-provisioner 2>/dev/null;
+
+    /root/bin/helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+    --set nfs.server=172.16.0.106 --set nfs.path=/export --set storageClass.reclaimPolicy=Retain -n nfs-subdir-external-provisioner;
+
+    /root/bin/oc adm policy add-scc-to-user privileged -z nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner;
+    /root/bin/oc adm policy add-scc-to-user hostmount-anyuid -z nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner;
+    /root/bin/oc rollout restart deployment nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner;
+  environment:
+    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"

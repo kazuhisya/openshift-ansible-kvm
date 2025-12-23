@@ -6,6 +6,7 @@
       - libvirt
       - qemu-kvm
       - virt-install
+      - guestfs-tools
       - dnsmasq
       - nginx
       - python3-lxml

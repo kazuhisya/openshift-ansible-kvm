@@ -47,6 +47,13 @@
   when: 'item.name in all_vms.list_vms'
   with_items: "{{ worker }}"
 
+- name: destroy old storage
+  shell: |
+    virsh destroy {{ item.name }}
+    virsh undefine --remove-all-storage {{ item.name }}
+  when: 'item.name  in all_vms.list_vms'
+  with_items: "{{ storage }}"
+
 - name: stop libvirt daemon
   service:
     name: libvirtd
@@ -74,6 +81,19 @@
   when:
     - chk_file.stat.exists == true
     - cleanup.conf == true
+
+- name: Check for rocky files folder existence
+  file:
+    path: "{{ files.rocky }}"
+  register: chk_rocky
+
+- name: Remove rocky files folder entirely
+  file:
+    path: "{{ files.rocky }}"
+    state: absent
+  when:
+    - chk_rocky.state == "directory"
+    - cleanup.images == true
 
 - name: check old hosts.openshift for dnsmasq
   stat:
@@ -122,6 +142,7 @@
     - kubectl
     - oc
     - openshift-install
+    - helm
   when:
     - cleanup.bin == true
   ignore_errors: yes
