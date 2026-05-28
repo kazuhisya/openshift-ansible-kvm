@@ -5,6 +5,7 @@
 # Input IP addr
 #   remote kvm host:
 #     192.168.0.100
+#     192.168.0.100 ansible_python_interpreter=/usr/libexec/platform-python # if you need
 #   local kvm:
 #     127.0.0.1 ansible_connection=local
 <IP addr>

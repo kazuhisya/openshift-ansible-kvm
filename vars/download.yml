@@ -34,40 +34,40 @@ files:
 #  for okd:         fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
 config:
   coreos_kernel: >-
-    {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.19\.") -%}       rhcos-live-kernel.x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.1([0-8])\.") -%} rhcos-live-kernel-x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
-    {%- elif openshift.coreos_version | regex_search("^4\.3\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.4\.3") -%}       rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%} rhcos-installer-kernel-x86_64
-    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%} rhcos-live-kernel-x86_64
-    {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+    {%- if   openshift.dist == 'okd' -%}                                          fedora-coreos-{{ openshift.coreos_version }}-live-kernel-x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.(19|2[0-9])\.") -%}     rhcos-live-kernel.x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.1([0-8])\.") -%}        rhcos-live-kernel-x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}               rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel
+    {%- elif openshift.coreos_version | regex_search("^4\.3\.") -%}               rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.4\.3") -%}              rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%}        rhcos-installer-kernel-x86_64
+    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%}        rhcos-live-kernel-x86_64
+    {%- else -%}                                                                  rhcos-{{ openshift.coreos_version }}-x86_64-installer-kernel-x86_64
     {%- endif -%}
   coreos_initramfs: >-
-    {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
-    {%- elif openshift.coreos_version | regex_search("^4\.1([0-9])\.") -%} rhcos-live-initramfs.x86_64.img
-    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
-    {%- elif openshift.coreos_version | regex_search("^4\.3\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
-    {%- elif openshift.coreos_version | regex_search("^4\.4\.3") -%}       rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
-    {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%} rhcos-installer-initramfs.x86_64.img
-    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%} rhcos-live-initramfs.x86_64.img
-    {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+    {%- if   openshift.dist == 'okd' -%}                                          fedora-coreos-{{ openshift.coreos_version }}-live-initramfs.x86_64.img
+    {%- elif openshift.coreos_version | regex_search("^4\.(1|2)\d\.") -%}         rhcos-live-initramfs.x86_64.img
+    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}               rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.img
+    {%- elif openshift.coreos_version | regex_search("^4\.3\.") -%}               rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+    {%- elif openshift.coreos_version | regex_search("^4\.4\.3") -%}              rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
+    {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%}        rhcos-installer-initramfs.x86_64.img
+    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%}        rhcos-live-initramfs.x86_64.img
+    {%- else -%}                                                                  rhcos-{{ openshift.coreos_version }}-x86_64-installer-initramfs.x86_64.img
     {%- endif -%}
   coreos_bios: >-
-    {%- if   openshift.dist == 'okd' -%}                                   fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
-    {%- elif openshift.coreos_version | regex_search("^4\.1([0-9])\.") -%} rhcos-metal.x86_64.raw.gz
-    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
-    {%- elif openshift.coreos_version | regex_search("^4\.3\.") -%}        rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
-    {%- elif openshift.coreos_version | regex_search("^4\.4\.3") -%}       rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
-    {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%} rhcos-metal.x86_64.raw.gz
-    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%} rhcos-metal.x86_64.raw.gz
-    {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
+    {%- if   openshift.dist == 'okd' -%}                                          fedora-coreos-{{ openshift.coreos_version }}-metal.x86_64.raw.xz
+    {%- elif openshift.coreos_version | regex_search("^4\.(1|2)\d\.") -%}         rhcos-metal.x86_64.raw.gz
+    {%- elif openshift.coreos_version | regex_search("^4\.2\.") -%}               rhcos-{{ openshift.coreos_version }}-x86_64-metal-bios.raw.gz
+    {%- elif openshift.coreos_version | regex_search("^4\.3\.") -%}               rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
+    {%- elif openshift.coreos_version | regex_search("^4\.4\.3") -%}              rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
+    {%- elif openshift.coreos_version | regex_search("^4\.+([4-5])\.") -%}        rhcos-metal.x86_64.raw.gz
+    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%}        rhcos-metal.x86_64.raw.gz
+    {%- else -%}                                                                  rhcos-{{ openshift.coreos_version }}-x86_64-metal.x86_64.raw.gz
     {%- endif -%}
   coreos_rootfs: >-
-    {%- if openshift.coreos_version | regex_search("^4\.1([0-9])\.") -%}   rhcos-live-rootfs.x86_64.img
-    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%} rhcos-live-rootfs.x86_64.img
-    {%- else -%}                                                           rhcos-{{ openshift.coreos_version }}-x86_64-live-rootfs.x86_64.img
+    {%- if openshift.coreos_version | regex_search("^4\.(1|2)\d\.") -%}           rhcos-live-rootfs.x86_64.img
+    {%- elif openshift.coreos_version | regex_search("^4\.+([6-9])\.") -%}        rhcos-live-rootfs.x86_64.img
+    {%- else -%}                                                                  rhcos-{{ openshift.coreos_version }}-x86_64-live-rootfs.x86_64.img
     {%- endif -%}
 
   openshift_installer: "openshift-install-linux-{{ openshift.install_version }}.tar.gz"
