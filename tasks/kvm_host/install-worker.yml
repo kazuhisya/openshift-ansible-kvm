@@ -42,6 +42,7 @@
     --graphics vnc,listen=0.0.0.0
     --noautoconsole
     --boot menu=on,useserial=on
+    {{ ('--cpu host-passthrough ' + ((gpu_cards | default([]))[item.gpu_index | int] | map('regex_replace', '^', '--host-device ') | join(' '))) if (((gpu_passthrough | default({})).enabled | default(false) | bool) and (item.gpu_index is defined)) else '' }}
   with_items: "{{ worker }}"
 
 - name: waiting for end of the initial installation of worker

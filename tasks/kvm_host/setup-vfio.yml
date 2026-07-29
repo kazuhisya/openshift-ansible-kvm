@@ -47,6 +47,13 @@
              if (gpu_passthrough.device_ids | default([]) | length > 0)
              else (_gpu_scan.stdout_lines | map('regex_replace', '^\S+\s+(\S+)$', '\1') | list | unique) }}
 
+    - name: Group passthrough functions by GPU card (index consumed by workers)
+      ansible.builtin.set_fact:
+        gpu_cards: "{{ (gpu_cards | default([])) + [gpu_pass_addrs | select('match', item ~ '\\.') | list] }}"
+      loop: "{{ gpu_pass_addrs | map('regex_replace', '\\.\\d+$', '') | unique | list }}"
+      loop_control:
+        label: "{{ item }}"
+
     - name: Report what will be bound
       ansible.builtin.debug:
         msg: "vfio-pci ids={{ gpu_vfio_ids | join(',') }} ; passthrough addresses={{ gpu_pass_addrs | join(',') }}"
