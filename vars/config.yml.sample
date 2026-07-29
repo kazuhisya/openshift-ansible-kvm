@@ -59,3 +59,13 @@ cleanup:
 # DNS hack for libvirt
 # Hack for internet connection issues with tricky DNS provided by libvirt+dnsmasq
 use_ext_dns: false
+
+# Optional GPU passthrough (VFIO). Needs IOMMU/VT-d enabled in BIOS.
+#  vendor_id:   PCI vendor id to match (10de = NVIDIA)
+#  device_ids:  explicit vfio-pci ids, e.g. ["10de:2c31", "10de:22e9"], empty to auto-detect
+#  kernel_args: extra grubby args, amd_iommu=on / intel_iommu=on added per CPU vendor
+#gpu_passthrough:
+#  enabled: true
+#  vendor_id: "10de"
+#  device_ids: []
+#  kernel_args: "iommu=pt"
