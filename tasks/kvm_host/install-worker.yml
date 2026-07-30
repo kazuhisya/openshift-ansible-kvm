@@ -17,34 +17,55 @@
 
 # want fix: move to using the virt module...
 - name: destroy old worker
+  vars:
+    _gpu: "{{ ((gpu_passthrough | default({})).enabled | default(false) | bool) and (item.gpu_index is defined) }}"
+    # keep the shared ipxe.iso cdrom, remove only vda and nvram
+    _undefine_flags: "{{ '--nvram --storage vda' if (_gpu | bool) else '--remove-all-storage' }}"
   shell: |
     virsh destroy {{ item.name }}
-    virsh undefine --remove-all-storage {{ item.name }}
+    virsh undefine {{ _undefine_flags }} {{ item.name }}
   when: 'item.name  in all_vms.list_vms'
   with_items: "{{ worker }}"
 
+- name: fetch iPXE UEFI boot ISO for GPU worker(s)
+  get_url:
+    url: https://boot.ipxe.org/ipxe.iso
+    dest: /var/lib/libvirt/images/ipxe.iso
+    mode: 0644
+  when:
+    - (gpu_passthrough | default({})).enabled | default(false) | bool
+    - worker | selectattr('gpu_index', 'defined') | list | length > 0
+
 # want fix: move to using the virt module...
 - name: install worker node
+  vars:
+    _gpu: "{{ ((gpu_passthrough | default({})).enabled | default(false) | bool) and (item.gpu_index is defined) }}"
+    _gpu_flags: "{{ ('--cpu host-passthrough ' + ((gpu_cards | default([]))[item.gpu_index | int] | map('regex_replace', '^', '--host-device ') | join(' '))) if (_gpu | bool) else '' }}"
   shell: >-
     virt-install
     --name {{item.name}}
     --hvm
     --virt-type kvm
-    --pxe
+    {{ '' if (_gpu | bool) else '--pxe' }}
     --arch x86_64
     --os-type linux
     --os-variant rhel8.0
     --network network=openshift,mac="52:54:00:00:01:{{item.mac}}"
     --vcpus {{spec_worker.cpu}}
     --ram {{spec_worker.ram}}
-    --disk pool=default,size={{spec_worker.disk}},format=qcow2,cache={{ spec_worker.disk_cache }}
+    --disk pool=default,size={{spec_worker.disk}},format=qcow2,cache={{ spec_worker.disk_cache }}{{ ',boot.order=1' if (_gpu | bool) else '' }}
+    {{ '--disk path=/var/lib/libvirt/images/ipxe.iso,device=cdrom,boot.order=2' if (_gpu | bool) else '' }}
     --check disk_size=off
     --graphics vnc,listen=0.0.0.0
     --noautoconsole
-    --boot menu=on,useserial=on
+    --boot {{ 'uefi,firmware.feature0.name=secure-boot,firmware.feature0.enabled=no' if (_gpu | bool) else 'menu=on,useserial=on' }}
+    {{ _gpu_flags }}
   with_items: "{{ worker }}"
 
+# GPU workers reboot into RHCOS, so there is no shutdown to wait for
 - name: waiting for end of the initial installation of worker
+  vars:
+    _gpu: "{{ ((gpu_passthrough | default({})).enabled | default(false) | bool) and (item.gpu_index is defined) }}"
   virt:
     name: "{{ item.name }}"
     command: status
@@ -52,6 +73,7 @@
   until: result.status == "shutdown"
   retries: 100
   delay: 10
+  when: not (_gpu | bool)
   with_items: "{{ worker }}"
 
 - name: restart worker

@@ -1,0 +1,133 @@
+---
+# GPU passthrough (VFIO) host setup.
+
+- name: GPU passthrough (VFIO) host setup
+  when: (gpu_passthrough | default({})).enabled | default(false) | bool
+  become: true
+  block:
+
+    - name: Pre-flight, firmware IOMMU must be enabled in BIOS
+      ansible.builtin.import_tasks: preflight-iommu.yml
+
+    - name: Choose the IOMMU enable arg for this host
+      ansible.builtin.set_fact:
+        _iommu_arg: "{{ 'amd_iommu=on' if _is_amd | bool else 'intel_iommu=on' }}"
+
+    - name: Discover GPU functions by vendor and card (address vendor:device)
+      ansible.builtin.shell: |
+        set -o pipefail
+        vendor='{{ gpu_passthrough.vendor_id | default("10de") }}'
+        for dev in $(lspci -D -n -d "${vendor}::" | awk '$2 ~ /^030[02]/ {print $1}'); do
+          slot="${dev%.*}"
+          for f in /sys/bus/pci/devices/"${slot}".*; do
+            a="$(basename "$f")"
+            ven="$(sed 's/^0x//' "$f/vendor")"
+            did="$(sed 's/^0x//' "$f/device")"
+            echo "$a $ven:$did"
+          done
+        done | sort -u
+      args:
+        executable: /bin/bash
+      register: _gpu_scan
+      changed_when: false
+
+    - name: Fail if passthrough is enabled but no GPU matched
+      ansible.builtin.fail:
+        msg: >-
+          gpu_passthrough.enabled is true but no vendor {{ gpu_passthrough.vendor_id | default("10de") }}
+          VGA/3D controller was found on {{ inventory_hostname }}.
+      when: _gpu_scan.stdout_lines | length == 0
+
+    - name: Register discovered passthrough addresses and vfio-pci ids
+      ansible.builtin.set_fact:
+        gpu_pass_addrs: >-
+          {{ _gpu_scan.stdout_lines | map('regex_replace', '^(\S+)\s.*$', '\1') | list }}
+        gpu_vfio_ids: >-
+          {{ gpu_passthrough.device_ids
+             if (gpu_passthrough.device_ids | default([]) | length > 0)
+             else (_gpu_scan.stdout_lines | map('regex_replace', '^\S+\s+(\S+)$', '\1') | list | unique) }}
+
+    - name: Group passthrough functions by GPU card (index consumed by workers)
+      ansible.builtin.set_fact:
+        gpu_cards: "{{ (gpu_cards | default([])) + [gpu_pass_addrs | select('match', item ~ '\\.') | list] }}"
+      loop: "{{ gpu_pass_addrs | map('regex_replace', '\\.\\d+$', '') | unique | list }}"
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Report what will be bound
+      ansible.builtin.debug:
+        msg: "vfio-pci ids={{ gpu_vfio_ids | join(',') }} ; passthrough addresses={{ gpu_pass_addrs | join(',') }}"
+
+    - name: Read current kernel cmdline
+      ansible.builtin.command: cat /proc/cmdline
+      register: _cmdline
+      changed_when: false
+
+    - name: Ensure IOMMU + early-vfio kernel args
+      ansible.builtin.command:
+        cmd: >-
+          grubby --update-kernel=ALL
+          --args="{{ _iommu_arg }} {{ gpu_passthrough.kernel_args | default('iommu=pt') }} rd.driver.pre=vfio-pci"
+      register: _grubby
+      changed_when: true
+      when: >-
+        _iommu_arg.split('=')[0] not in _cmdline.stdout
+        or 'iommu=pt' not in _cmdline.stdout
+        or 'rd.driver.pre=vfio-pci' not in _cmdline.stdout
+
+    - name: Configure vfio-pci to claim the GPU ids
+      ansible.builtin.copy:
+        dest: /etc/modprobe.d/vfio-gpu.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          # Managed by openshift-ansible-kvm setup-vfio.yml
+          options vfio-pci ids={{ gpu_vfio_ids | join(',') }}
+          softdep nouveau pre: vfio-pci
+          softdep snd_hda_intel pre: vfio-pci
+          softdep nvidia pre: vfio-pci
+      register: _vfio_conf
+
+    - name: Ensure vfio modules load at boot
+      ansible.builtin.copy:
+        dest: /etc/modules-load.d/vfio.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          vfio_pci
+          vfio
+          vfio_iommu_type1
+      register: _vfio_modules
+
+    - name: Rebuild initramfs so vfio-pci binds before the GPU drivers
+      ansible.builtin.command: dracut --force --regenerate-all
+      when: _grubby is changed or _vfio_conf is changed or _vfio_modules is changed
+
+    - name: Reboot to apply IOMMU + vfio binding
+      ansible.builtin.reboot:
+        reboot_timeout: 1800
+      when: _grubby is changed or _vfio_conf is changed or _vfio_modules is changed
+
+    - name: Verify IOMMU is active and every GPU function is bound to vfio-pci
+      ansible.builtin.shell: |
+        set -o pipefail
+        [ "$(ls -1 /sys/class/iommu 2>/dev/null | wc -l)" -gt 0 ] || { echo "IOMMU not active after reboot"; exit 2; }
+        rc=0
+        for a in {{ gpu_pass_addrs | join(' ') }}; do
+          drv="$(basename "$(readlink -f /sys/bus/pci/devices/$a/driver 2>/dev/null)" 2>/dev/null)"
+          grp="$(basename "$(readlink -f /sys/bus/pci/devices/$a/iommu_group 2>/dev/null)" 2>/dev/null)"
+          echo "$a driver=${drv:-<none>} iommu_group=${grp:-?}"
+          [ "$drv" = "vfio-pci" ] || rc=1
+        done
+        exit $rc
+      args:
+        executable: /bin/bash
+      register: _vfio_verify
+      changed_when: false
+      failed_when: _vfio_verify.rc != 0
+
+    - name: Show final vfio bindings
+      ansible.builtin.debug:
+        var: _vfio_verify.stdout_lines

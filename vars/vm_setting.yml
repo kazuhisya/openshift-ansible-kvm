@@ -54,6 +54,7 @@ worker:
   - name: worker-1
     ip: 172.16.0.105
     mac: "06"
+# Optional per-worker GPU passthrough: add `gpu_index: 0` with gpu_passthrough enabled
 
 # Guest specs
 #  disk_cache: This attribute controls the cache mechanism.

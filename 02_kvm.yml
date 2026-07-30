@@ -11,6 +11,7 @@
     - include_tasks: tasks/kvm_host/setup-selinux.yml
     - include_tasks: tasks/kvm_host/setup-firewalld.yml
     - include_tasks: tasks/kvm_host/setup-dnsmasq.yml
+    - include_tasks: tasks/kvm_host/setup-vfio.yml
     - include_tasks: tasks/kvm_host/setup-libvirtd.yml
     - include_tasks: tasks/kvm_host/setup-nginx.yml
     - include_tasks: tasks/kvm_host/setup-openshift-install-config.yml
@@ -18,3 +19,4 @@
     - include_tasks: tasks/kvm_host/install-master.yml
     - include_tasks: tasks/kvm_host/install-worker.yml
     - include_tasks: tasks/kvm_host/wait-for-complete.yml
+    - include_tasks: tasks/kvm_host/approve-csr.yml

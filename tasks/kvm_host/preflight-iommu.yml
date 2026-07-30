@@ -1,0 +1,52 @@
+---
+# IOMMU (AMD-Vi / Intel VT-d) must be enabled in firmware before GPU passthrough works.
+
+- name: Detect host CPU vendor
+  ansible.builtin.command: "awk -F': ' '/^vendor_id/{print $2; exit}' /proc/cpuinfo"
+  register: _cpu_vendor
+  changed_when: false
+
+- name: Set IOMMU firmware facts
+  ansible.builtin.set_fact:
+    _is_amd: "{{ 'AuthenticAMD' in _cpu_vendor.stdout }}"
+    _acpi_table: "{{ 'IVRS' if 'AuthenticAMD' in _cpu_vendor.stdout else 'DMAR' }}"
+
+- name: Count active IOMMUs exposed to the kernel
+  ansible.builtin.command: bash -c "ls -1 /sys/class/iommu 2>/dev/null | wc -l"
+  register: _iommu_active
+  changed_when: false
+
+- name: Check for the firmware IOMMU ACPI table ({{ _acpi_table }})
+  ansible.builtin.stat:
+    path: "/sys/firmware/acpi/tables/{{ _acpi_table }}"
+  register: _acpi_stat
+  become: true
+
+- name: Fail with BIOS instructions when firmware IOMMU is disabled
+  ansible.builtin.fail:
+    msg: |
+      IOMMU appears DISABLED in this host's firmware, so GPU passthrough cannot work: no {{ _acpi_table }} ACPI table and no active IOMMU under /sys/class/iommu.
+
+      Enable it in BIOS/UEFI, then reboot and re-run this playbook:
+      {% if _is_amd %}
+      AMD: enable "IOMMU" (AMD-Vi), commonly at Advanced -> AMD CBS -> NBIO Common Options -> IOMMU = Enabled (also enable "ACS Enable" if present). Some boards list it as Advanced -> AMD IOMMU.
+      {% else %}
+      Intel: enable "VT-d" (Intel Virtualization Technology for Directed I/O), commonly under Advanced -> System Agent (SA) / Chipset Configuration. Keep "Intel VT-x" enabled as well.
+      {% endif %}
+      On a headless host with no local console, enable it through the BMC's BIOS settings over Redfish or the BMC web UI.
+  when:
+    - _iommu_active.stdout | int == 0
+    - not _acpi_stat.stat.exists
+
+- name: Note that firmware IOMMU is on but the kernel has not activated it yet
+  ansible.builtin.debug:
+    msg: >-
+      Firmware IOMMU is enabled ({{ _acpi_table }} present) but the kernel is not using it yet. setup-vfio will add {{ 'amd_iommu=on' if _is_amd else 'intel_iommu=on' }} iommu=pt and reboot to activate it.
+  when:
+    - _iommu_active.stdout | int == 0
+    - _acpi_stat.stat.exists
+
+- name: Confirm IOMMU is already active
+  ansible.builtin.debug:
+    msg: "IOMMU active: {{ _iommu_active.stdout }} controller(s) under /sys/class/iommu."
+  when: _iommu_active.stdout | int > 0
