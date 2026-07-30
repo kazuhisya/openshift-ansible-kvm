@@ -19,3 +19,4 @@
     - include_tasks: tasks/kvm_host/install-master.yml
     - include_tasks: tasks/kvm_host/install-worker.yml
     - include_tasks: tasks/kvm_host/wait-for-complete.yml
+    - include_tasks: tasks/kvm_host/approve-csr.yml

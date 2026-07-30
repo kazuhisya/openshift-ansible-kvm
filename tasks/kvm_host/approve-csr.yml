@@ -1,14 +1,12 @@
 ---
-- name: check csr status
-  shell: >-
-    /root/bin/oc get csr | grep Pending |awk '{ print $1 }'
+- name: approve pending CSRs until all workers are Ready
+  shell: |
+    /root/bin/oc get csr --no-headers 2>/dev/null | awk '/Pending/{print $1}' | xargs -r /root/bin/oc adm certificate approve >/dev/null 2>&1 || true
+    /root/bin/oc get nodes --no-headers 2>/dev/null | awk '$1 ~ /^worker/ && $2 == "Ready" {c++} END {print c+0}'
   environment:
     KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
-  register: result
-  ignore_errors: yes
-
-- name: approve csr
-  command: "/root/bin/oc adm certificate approve {{ item }}"
-  environment:
-    KUBECONFIG: "{{ files.kvm }}/bare-metal/auth/kubeconfig"
-  with_items: "{{ result.stdout_lines }}"
+  register: _workers_ready
+  until: (_workers_ready.stdout | int) >= (worker | length)
+  retries: 60
+  delay: 20
+  changed_when: false
