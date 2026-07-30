@@ -40,10 +40,12 @@
   when: 'item.name in all_vms.list_vms'
   with_items: "{{ master }}"
 
+# GPU workers being UEFI undefine must also drop nvram
 - name: destroy old worker
   shell: |
     virsh destroy {{ item.name }}
-    virsh undefine --remove-all-storage {{ item.name }}
+    if virsh dumpxml {{ item.name }} | grep -q '<nvram'; then NV="--nvram"; else NV=""; fi
+    virsh undefine --remove-all-storage $NV {{ item.name }}
   when: 'item.name in all_vms.list_vms'
   with_items: "{{ worker }}"
 
